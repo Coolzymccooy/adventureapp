@@ -3,23 +3,12 @@
 <head>
   <meta charset="UTF-8">
   <title>Tiwaton Adventure</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-
-  <!-- Firebase (v8 compat for simple global usage) -->
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
-  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
-  <script>   
-import { initializeApp } from "firebase/app";
-// My web app's Firebase configuration
-const firebaseConfig = {
-  apiKey: "AIzaSyAuc_qVtzxpk1EeahGt-_KoBEMxOTdBm5U",
-  authDomain: "tiwaton-family-adventure.firebaseapp.com",
-  projectId: "tiwaton-family-adventure",
-  storageBucket: "tiwaton-family-adventure.firebasestorage.app",
-  messagingSenderId: "53083980470",
-  appId: "1:53083980470:web:dc41aa974cda42eaf61c17"
-};
+  
 
 // Initialize Firebase
 const app = initializeApp(firebaseConfig);
@@ -187,7 +176,7 @@ const app = initializeApp(firebaseConfig);
           </div>
 
           <section class="drawing-gallery">
-            <h3>Saved Drawings (local only)</h3>
+             <h3>Saved Drawings (shared with family)</h3>
             <div id="savedDrawings"></div>
           </section>
         </div>
@@ -255,6 +244,29 @@ const app = initializeApp(firebaseConfig);
       <span>Powered by love, laughter &amp; a bit of JavaScript.</span>
     </div>
   </footer>
+
+  <!-- Firebase SDKs (v8) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+
+  <script>
+    // 🔴 REPLACE these values with your actual config from Firebase!
+    var firebaseConfig = {
+  apiKey: "AIzaSyAuc_qVtzxpk1EeahGt-_KoBEMxOTdBm5U",
+  authDomain: "tiwaton-family-adventure.firebaseapp.com",
+  projectId: "tiwaton-family-adventure",
+  storageBucket: "tiwaton-family-adventure.firebasestorage.app",
+  messagingSenderId: "53083980470",
+  appId: "1:53083980470:web:dc41aa974cda42eaf61c17"
+
+    };
+
+  firebase.initializeApp(firebaseConfig);
+    // make Firestore available to other scripts
+    window.db = firebase.firestore();
+  </script>
+
 
   <script src="js/common.js"></script>
   <script src="js/drawing.js"></script>
