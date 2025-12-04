@@ -1728,24 +1728,37 @@ button:hover,
     font-size: 14px;
   }
 
-  h1 {
-    font-size: 1.6rem;
+  /* Header: stack and shrink */
+  .main-header {
+    flex-direction: column;
+    align-items: center;
+    padding: 8px 10px;
+    gap: 8px;
   }
 
-  h2 {
+  .logo-text h1 {
     font-size: 1.3rem;
   }
 
-  h3 {
-    font-size: 1.05rem;
+  .logo-tagline {
+    font-size: 0.75rem;
   }
 
-  .main-header,
-  .sub-header {
-    padding: 8px 10px;
+  /* Nav: two columns of “pills” so it doesn’t dominate */
+  .main-nav {
+    width: 100%;
+    justify-content: center;
   }
 
-  /* Tabs: wrap nicely, easier to tap */
+  .main-nav a {
+    flex: 1 1 48%;
+    text-align: center;
+    padding: 6px 4px;
+    font-size: 0.8rem;
+    margin: 2px 0;
+  }
+
+  /* Old tab bar (inner pages) */
   .tab {
     flex-wrap: wrap;
   }
@@ -1757,24 +1770,29 @@ button:hover,
     text-align: center;
   }
 
-  /* Main content card tighter on mobile */
+  /* Main card tighter */
   .tabcontent {
     margin: 8px 6px;
     padding: 12px;
   }
 
-  /* Landing hero */
+  /* Hide the big background blobs on mobile to reduce “busyness” */
+  .floating-shape {
+    display: none;
+  }
+
+  /* Hero section: single column, smaller text */
   .hero-section {
     grid-template-columns: 1fr;
-    gap: 16px;
+    gap: 14px;
   }
 
   .hero-title {
-    font-size: 1.7rem;
+    font-size: 1.4rem;
   }
 
   .hero-subtitle {
-    font-size: 0.9rem;
+    font-size: 0.85rem;
   }
 
   .hero-cta-row {
@@ -1783,9 +1801,35 @@ button:hover,
 
   .hero-cta-row .btn {
     width: 100%;
+    padding: 8px 14px;
+    font-size: 0.85rem;
   }
 
-  /* Feature grids → single column */
+  .hero-mini-row {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .mini-pill {
+    font-size: 0.75rem;
+  }
+
+  /* Orbit card: reduce margin so it fits nicely */
+  .hero-orbit-card {
+    max-width: 100%;
+  }
+
+  .orbit-stat-number {
+    font-size: 1.3rem;
+  }
+
+  .orbit-progress-text,
+  .hero-message-box,
+  .orbit-footnote {
+    font-size: 0.75rem;
+  }
+
+  /* Feature grid: single column */
   .feature-grid,
   .activities-grid,
   .games-grid,
@@ -1798,7 +1842,7 @@ button:hover,
   .activity-card,
   .game-card,
   .reminder-card {
-    padding: 12px 10px 34px;
+    padding: 10px 10px 30px;
   }
 
   /* Drawing layout (tools above canvas) */
@@ -1835,6 +1879,7 @@ button:hover,
     text-align: center;
   }
 }
+
 
 /* Tablets */
 @media (min-width: 601px) and (max-width: 900px) {
