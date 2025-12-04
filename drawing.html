@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tiwaton Adventure</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/style.css">
+
+  <!-- Firebase (v8 compat for simple global usage) -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script>   
+import { initializeApp } from "firebase/app";
+// My web app's Firebase configuration
+const firebaseConfig = {
+  apiKey: "AIzaSyAuc_qVtzxpk1EeahGt-_KoBEMxOTdBm5U",
+  authDomain: "tiwaton-family-adventure.firebaseapp.com",
+  projectId: "tiwaton-family-adventure",
+  storageBucket: "tiwaton-family-adventure.firebasestorage.app",
+  messagingSenderId: "53083980470",
+  appId: "1:53083980470:web:dc41aa974cda42eaf61c17"
+};
+
+// Initialize Firebase
+const app = initializeApp(firebaseConfig);
+  </script>
+</head>
+<body>
+ <header class="sub-header">
+    <a href="index.html" class="tab-logo-link">
+      <div class="tab-logo-badge">TA</div>
+      <span class="tab-logo-text">Tiwaton Adventure</span>
+    </a>
+  </header>
+
+  <nav class="tab">
+    <a class="tablinks" href="stories.html">Stories & Quizzes</a>
+    <a class="tablinks active" href="drawing.html">Drawing & Coloring</a>
+    <a class="tablinks" href="activities.html">Activities & Reminders</a>
+    <a class="tablinks" href="games.html">Games & Flashcards</a>
+    <a class="tablinks" href="countdown.html">Countdown & Events</a>
+  </nav>
+
+  <main>
+    <section id="Drawing" class="tabcontent drawing-page">
+      <div class="drawing-header-bar">
+        <h2>Drawing & Coloring</h2>
+        <span class="drawing-tip">
+          Tip: Use touch or mouse to draw. Try the Rainbow brush or Surprise colour!
+        </span>
+      </div>
+
+      <!-- Progress / mission box -->
+      <div class="progress-report">
+        <div class="progress-title">Today’s Art Mission</div>
+        <div class="progress-content">
+          Draw 5 pictures to reach your goal!
+        </div>
+      </div>
+
+      <!-- Challenges + Badges strip -->
+      <div class="challenges-badges">
+        <section class="art-challenges">
+          <h3>Art Challenges</h3>
+          <p id="currentChallenge" class="challenge-active-text">
+            Tap a challenge below and try to draw it on the canvas.
+          </p>
+          <div class="challenge-buttons">
+            <button type="button" class="challenge-btn"
+                    data-challenge="Draw your family as superheroes.">
+              Family Superheroes
+            </button>
+            <button type="button" class="challenge-btn"
+                    data-challenge="Draw your house with a big bright sun and garden.">
+              Our Home &amp; Garden
+            </button>
+            <button type="button" class="challenge-btn"
+                    data-challenge="Draw your favourite place to go as a family.">
+              Favourite Family Place
+            </button>
+            <button type="button" class="challenge-btn"
+                    data-challenge="Draw yourself thanking God for something today.">
+              Thankful Moment
+            </button>
+          </div>
+        </section>
+
+        <section class="art-badges">
+          <h3>Your Art Badges</h3>
+          <div id="badgeStrip" class="badge-strip">
+            <!-- Filled by JS -->
+          </div>
+        </section>
+      </div>
+
+      <div class="drawing-layout">
+        <!-- LEFT: tools -->
+        <aside class="drawing-toolbar">
+          <h3>Tools</h3>
+
+          <div class="brush-controls">
+            <label>Brush Size:
+              <select id="brushSize">
+                <option value="2">2 px</option>
+                <option value="5" selected>5 px</option>
+                <option value="10">10 px</option>
+                <option value="20">20 px</option>
+              </select>
+            </label>
+
+            <label>Brush Color:
+              <input type="color" id="brushColor" value="#ffffff" />
+            </label>
+
+            <label>Opacity:
+              <input type="range" id="brushOpacity" min="0.1" max="1" step="0.1" value="1">
+            </label>
+
+            <label>
+              <input type="checkbox" id="mirrorMode">
+              Mirror mode (left/right)
+            </label>
+
+            <label>Shape:
+              <select id="shapeMode">
+                <option value="free">Freehand</option>
+                <option value="line">Line</option>
+                <option value="rect">Rectangle</option>
+                <option value="circle">Circle</option>
+              </select>
+            </label>
+
+            <label>Brush:
+              <select id="brushType">
+                <option value="normal">Normal</option>
+                <option value="spray">Spray</option>
+                <option value="chalk">Chalk</option>
+                <option value="rainbow">Rainbow</option>
+                <option value="stars">Stars</option>
+              </select>
+            </label>
+
+            <label>Sticker:
+              <select id="stickerSelect">
+                <option value="">None</option>
+                <option value="🌟">🌟</option>
+                <option value="⭐">⭐</option>
+                <option value="❤️">❤️</option>
+                <option value="🐱">🐱</option>
+                <option value="😊">😊</option>
+                <option value="🚗">🚗</option>
+                <option value="🎈">🎈</option>
+              </select>
+            </label>
+
+            <label>Background:
+              <select id="bgSelect" onchange="setBackground()">
+                <option value="">None</option>
+                <option value="sky">Sky</option>
+                <option value="grass">Grass</option>
+                <option value="underwater">Underwater</option>
+              </select>
+            </label>
+          </div>
+
+          <div class="drawing-actions">
+            <button type="button" id="panBtn">🤚 Pan OFF</button>
+            <button type="button" onclick="toggleEraser()" id="eraserBtn">✏️ Eraser OFF</button>
+            <button type="button" onclick="fillCanvas()">🪣 Fill</button>
+            <button type="button" onclick="undoDrawing()">↩ Undo</button>
+            <button type="button" onclick="redoDrawing()">↪ Redo</button>
+            <button type="button" onclick="clearCanvas()">🧹 Clear</button>
+            <button type="button" onclick="randomColor()">🎲 Surprise colour</button>
+          </div>
+
+          <div class="drawing-meta">
+            <input type="text" id="drawingName" placeholder="Drawing title" />
+            <button type="button" onclick="saveDrawing()">Save to gallery</button>
+            <button type="button" onclick="downloadDrawing()">Download PNG</button>
+          </div>
+        </aside>
+
+        <!-- RIGHT: canvas and gallery -->
+        <div class="drawing-main">
+          <div class="canvas-wrapper floating-card">
+            <canvas id="drawingBoard" width="860" height="400"></canvas>
+          </div>
+
+          <section class="drawing-gallery">
+            <h3>Saved Drawings (local only)</h3>
+            <div id="savedDrawings"></div>
+          </section>
+        </div>
+      </div>
+
+      <div class="comments-section">
+        <h4>Parent Comments</h4>
+        <textarea class="comment-input" placeholder="Leave a comment on your child's progress..."></textarea>
+        <button onclick="addComment(this)">Post Comment</button>
+        <div class="comments-list"></div>
+      </div>
+    </section>
+  </main>
+
+  <!-- Badge popup overlay -->
+  <div id="badgePopup" class="badge-popup hidden">
+    <div class="badge-popup-inner">
+      <div class="badge-popup-icon" id="badgePopupIcon">🎨</div>
+      <div class="badge-popup-text">
+        <h3>New Badge Unlocked!</h3>
+        <p id="badgePopupLabel">You’ve reached a new art milestone!</p>
+      </div>
+      <button type="button" id="badgePopupClose">Awesome!</button>
+    </div>
+  </div>
+
+<footer class="main-footer">
+    <div class="footer-inner">
+      <div class="footer-column footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-badge">TA</div>
+          <div class="footer-logo-text">
+            <div class="footer-title">Tiwaton Adventure</div>
+            <div class="footer-tagline">Screen time, but make it family time.</div>
+          </div>
+        </div>
+        <p class="footer-mini">
+          Built for giggles, memories and “remember when we…” moments.
+        </p>
+      </div>
+
+      <div class="footer-column footer-links">
+        <h4>Jump to</h4>
+        <a href="stories.html">Stories &amp; Quizzes</a>
+        <a href="drawing.html">Drawing &amp; Coloring</a>
+        <a href="activities.html">Activities &amp; Reminders</a>
+        <a href="games.html">Games &amp; Flashcards</a>
+        <a href="countdown.html">Countdown &amp; Events</a>
+      </div>
+
+      <div class="footer-column footer-fun">
+        <h4>Family fact of the moment</h4>
+        <p id="footerFunLine">
+          Loading something slightly silly…
+        </p>
+        <p class="footer-mini">
+          Tip: best enjoyed with snacks within arm’s reach. 🍿
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span id="footerYear"></span> Tiwaton Adventure.</span>
+      <span class="footer-dot">•</span>
+      <span>Powered by love, laughter &amp; a bit of JavaScript.</span>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/drawing.js"></script>
+  <script src="js/comments.js"></script>
+</body>
+</html>

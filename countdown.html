@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tiwaton Adventure – Countdown & Events</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <!-- Reusable logo header -->
+  <header class="sub-header">
+    <a href="index.html" class="tab-logo-link">
+      <div class="tab-logo-badge">TA</div>
+      <span class="tab-logo-text">Tiwaton Adventure</span>
+    </a>
+  </header>
+
+  <!-- Main app nav -->
+  <nav class="tab">
+    <a class="tablinks" href="stories.html">Stories &amp; Quizzes</a>
+    <a class="tablinks" href="drawing.html">Drawing &amp; Coloring</a>
+    <a class="tablinks" href="activities.html">Activities &amp; Reminders</a>
+    <a class="tablinks" href="games.html">Games &amp; Flashcards</a>
+    <a class="tablinks active" href="countdown.html">Countdown &amp; Events</a>
+  </nav>
+
+  <main>
+    <section id="Countdown" class="tabcontent countdown-page">
+      <!-- HERO: big moments radar -->
+      <div class="countdown-hero">
+        <div class="countdown-hero-left">
+          <div class="countdown-chip">🚀 Big Moments Radar</div>
+          <h2>Countdown &amp; Events</h2>
+          <p class="countdown-subtitle">
+            Birthdays, holidays, sleepovers, first days at school – keep the
+            excitement alive with a family countdown wall.
+          </p>
+
+          <ul class="countdown-highlights">
+            <li>🎂 Count sleeps till the next birthday party.</li>
+            <li>✈️ Watch holidays get closer instead of “are we there yet?”.</li>
+            <li>🎓 Track school milestones, recitals and performances.</li>
+            <li>🎉 Celebrate “small big” days – like movie night or pancake Saturday.</li>
+          </ul>
+
+          <p class="countdown-note">
+            This is your <strong>“remember what we’re looking forward to”</strong>
+            board – perfect for kids who ask “how many days left?” every 7 minutes. 😄
+          </p>
+        </div>
+
+        <div class="countdown-hero-right">
+          <div class="countdown-next-card floating-card">
+            <div class="countdown-next-label">Next Big Thing</div>
+
+            <div class="countdown-next-main">
+              <div class="countdown-next-days" id="nextEventDays">--</div>
+              <div class="countdown-next-text">
+                <div class="next-event-name" id="nextEventName">
+                  No events yet… but your calendar is ready.
+                </div>
+                <div class="next-event-date" id="nextEventDate">
+                  Add one below to start the excitement.
+                </div>
+              </div>
+            </div>
+
+            <div class="countdown-next-meter">
+              <div class="countdown-meter-bar">
+                <div class="countdown-meter-fill" id="nextEventProgress"></div>
+              </div>
+              <p class="countdown-meter-text">
+                Progress to celebration day. 🎊
+              </p>
+            </div>
+
+            <p class="countdown-footnote">
+              Tip: Use this for “normal” days too – like “Family pizza experiment night”.
+            </p>
+          </div>
+        </div>
+      </div>
+
+      <!-- EVENT CREATOR -->
+      <section class="countdown-form-section">
+        <h3 class="countdown-form-heading">Add a family event</h3>
+        <p class="countdown-form-subtext">
+          Keep it simple and fun. The more “you” it sounds, the better:
+          “Princess’ glitter birthday”, “Movie marathon with Dad”, “Mum’s graduation”.
+        </p>
+
+        <div class="countdown-form-grid">
+          <div class="form-field">
+            <label for="eventName">Event name</label>
+            <input type="text" id="eventName" placeholder="e.g. Princess’ birthday party" />
+          </div>
+
+          <div class="form-field">
+            <label for="eventDate">Date</label>
+            <input type="date" id="eventDate" />
+          </div>
+
+          <div class="form-field">
+            <label for="eventNote">Special note (optional)</label>
+            <input type="text" id="eventNote" placeholder="Bring balloons, wear pyjamas, etc." />
+          </div>
+        </div>
+
+        <button type="button" onclick="addEvent()">➕ Add to countdown</button>
+
+        <p class="countdown-form-tip">
+          Coming soon: events will sync across all devices automatically – for now,
+          they live in this browser and that’s okay. 🌈
+        </p>
+      </section>
+
+      <!-- EVENTS LIST (hooked to countdown.js) -->
+      <section class="countdown-events-section">
+        <h3 class="events-heading">Our upcoming adventures</h3>
+        <p class="events-subtext">
+          Every card below is something your family is looking forward to. You can
+          click an event to see more details (features coming soon).
+        </p>
+
+        <div id="eventsList" class="events-grid">
+          <!-- countdown.js can fill this with event cards -->
+        </div>
+      </section>
+
+      <!-- Suggestions/comments -->
+      <div class="comments-section">
+        <h4>What should we count down to next?</h4>
+        <textarea class="comment-input"
+          placeholder="Type an idea like: 'First family camping trip', 'Disney night', 'Visit grandparents'..."></textarea>
+        <button onclick="addComment(this)">Share Idea</button>
+        <div class="comments-list"></div>
+      </div>
+    </section>
+  </main>
+
+    <footer class="main-footer">
+    <div class="footer-inner">
+      <div class="footer-column footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-badge">TA</div>
+          <div class="footer-logo-text">
+            <div class="footer-title">Tiwaton Adventure</div>
+            <div class="footer-tagline">Screen time, but make it family time.</div>
+          </div>
+        </div>
+        <p class="footer-mini">
+          Built for giggles, memories and “remember when we…” moments.
+        </p>
+      </div>
+
+      <div class="footer-column footer-links">
+        <h4>Jump to</h4>
+        <a href="stories.html">Stories &amp; Quizzes</a>
+        <a href="drawing.html">Drawing &amp; Coloring</a>
+        <a href="activities.html">Activities &amp; Reminders</a>
+        <a href="games.html">Games &amp; Flashcards</a>
+        <a href="countdown.html">Countdown &amp; Events</a>
+      </div>
+
+      <div class="footer-column footer-fun">
+        <h4>Family fact of the moment</h4>
+        <p id="footerFunLine">
+          Loading something slightly silly…
+        </p>
+        <p class="footer-mini">
+          Tip: best enjoyed with snacks within arm’s reach. 🍿
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span id="footerYear"></span> Tiwaton Adventure.</span>
+      <span class="footer-dot">•</span>
+      <span>Powered by love, laughter &amp; a bit of JavaScript.</span>
+    </div>
+  </footer>
+
+  <script src="js/common.js"></script>
+  <script src="js/countdown.js"></script>
+  <script src="js/comments.js"></script>
+</body>
+</html>

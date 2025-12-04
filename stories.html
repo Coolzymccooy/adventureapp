@@ -1,0 +1,90 @@
+<head>
+  <meta charset="UTF-8">
+  <title>Tiwaton - Family Adventure</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+    <header class="sub-header">
+    <a href="index.html" class="tab-logo-link">
+      <div class="tab-logo-badge">TA</div>
+      <span class="tab-logo-text">Tiwaton Adventure</span>
+    </a>
+  </header>
+      <!-- shared header/nav --> 
+  <nav class="tab">
+    <a class="tablinks active" href="stories.html">Stories & Quizzes</a>
+    <a class="tablinks" href="drawing.html">Drawing & Coloring</a>
+    <a class="tablinks" href="activities.html">Activities & Reminders</a>
+    <a class="tablinks" href="games.html">Games & Flashcards</a>
+    <a class="tablinks" href="countdown.html">Countdown & Events</a>
+  </nav>
+
+  <!-- page content -->
+  <main>
+    <section id="Stories" class="tabcontent">
+      <h2>Stories & Quizzes</h2>
+      <textarea id="storyInput" placeholder="Add your story or quiz option..."></textarea>
+      <button onclick="addStory()">Add & Save Story</button>
+      <div id="storiesContent" aria-live="polite"></div>
+
+      <div class="progress-report">
+        <h4>Progress Dashboard</h4>
+        <div class="progress-content"></div>
+      </div>
+
+      <div class="comments-section">
+        <h4>Parent Comments</h4>
+        <textarea class="comment-input" placeholder="Leave a comment on your child's progress..."></textarea>
+        <button onclick="addComment(this)">Post Comment</button>
+        <div class="comments-list"></div>
+      </div>
+    </section>
+  </main>
+
+    <footer class="main-footer">
+    <div class="footer-inner">
+      <div class="footer-column footer-brand">
+        <div class="footer-logo">
+          <div class="footer-logo-badge">TA</div>
+          <div class="footer-logo-text">
+            <div class="footer-title">Tiwaton Adventure</div>
+            <div class="footer-tagline">Screen time, but make it family time.</div>
+          </div>
+        </div>
+        <p class="footer-mini">
+          Built for giggles, memories and “remember when we…” moments.
+        </p>
+      </div>
+
+      <div class="footer-column footer-links">
+        <h4>Jump to</h4>
+        <a href="stories.html">Stories &amp; Quizzes</a>
+        <a href="drawing.html">Drawing &amp; Coloring</a>
+        <a href="activities.html">Activities &amp; Reminders</a>
+        <a href="games.html">Games &amp; Flashcards</a>
+        <a href="countdown.html">Countdown &amp; Events</a>
+      </div>
+
+      <div class="footer-column footer-fun">
+        <h4>Family fact of the moment</h4>
+        <p id="footerFunLine">
+          Loading something slightly silly…
+        </p>
+        <p class="footer-mini">
+          Tip: best enjoyed with snacks within arm’s reach. 🍿
+        </p>
+      </div>
+    </div>
+
+    <div class="footer-bottom">
+      <span>© <span id="footerYear"></span> Tiwaton Adventure.</span>
+      <span class="footer-dot">•</span>
+      <span>Powered by love, laughter &amp; a bit of JavaScript.</span>
+    </div>
+  </footer>
+
+
+  <script src="js/common.js"></script>
+  <script src="js/stories.js"></script>
+  <script src="js/comments.js"></script>
+</body>
