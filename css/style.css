@@ -1777,3 +1777,159 @@ button:hover {
 
 
 
+
+
+/* ===== Mobile & tablet tweaks ===== */
+
+/* Stop Safari from randomly enlarging text */
+html {
+  -webkit-text-size-adjust: 100%;
+}
+
+/* Small phones */
+@media (max-width: 600px) {
+  body {
+    font-size: 14px;
+  }
+
+  h1 {
+    font-size: 1.6rem;
+  }
+
+  h2 {
+    font-size: 1.3rem;
+  }
+
+  h3 {
+    font-size: 1.05rem;
+  }
+
+  .main-header,
+  .sub-header {
+    padding: 8px 10px;
+  }
+
+  /* Tabs: wrap nicely, easier to tap */
+  .tab {
+    flex-wrap: wrap;
+  }
+
+  .tab a {
+    flex: 1 1 50%;
+    padding: 8px 4px;
+    font-size: 0.8rem;
+    text-align: center;
+  }
+
+  /* Main content card tighter on mobile */
+  .tabcontent {
+    margin: 8px 6px;
+    padding: 12px;
+  }
+
+  /* Landing hero */
+  .hero-section {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+
+  .hero-title {
+    font-size: 1.7rem;
+  }
+
+  .hero-subtitle {
+    font-size: 0.9rem;
+  }
+
+  .hero-cta-row {
+    flex-direction: column;
+  }
+
+  .hero-cta-row .btn {
+    width: 100%;
+    justify-content: center;
+  }
+
+  /* Feature grids → single column */
+  .feature-grid,
+  .activities-grid,
+  .games-grid,
+  .reminders-grid,
+  .events-grid {
+    grid-template-columns: 1fr !important;
+  }
+
+  .feature-card,
+  .activity-card,
+  .game-card,
+  .reminder-card {
+    padding: 12px 10px 34px;
+  }
+
+  /* Drawing layout (tools above canvas) */
+  .drawing-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .drawing-toolbar {
+    order: 2;
+  }
+
+  .drawing-main {
+    order: 1;
+  }
+
+  /* Challenges + badges one column */
+  .challenges-badges {
+    grid-template-columns: 1fr;
+  }
+
+  /* Activities / games / countdown hero grids to 1 column */
+  .activities-hero,
+  .games-hero,
+  .countdown-hero {
+    grid-template-columns: 1fr;
+  }
+
+  /* Footer stack vertically */
+  .footer-inner {
+    grid-template-columns: 1fr;
+  }
+
+  .footer-bottom {
+    text-align: center;
+  }
+}
+
+/* Tablets */
+@media (min-width: 601px) and (max-width: 900px) {
+  body {
+    font-size: 15px;
+  }
+
+  .tab a {
+    padding: 10px 8px;
+    font-size: 0.9rem;
+  }
+
+  .tabcontent {
+    margin: 10px 10px;
+    padding: 14px;
+  }
+
+  .hero-section,
+  .activities-hero,
+  .games-hero,
+  .countdown-hero {
+    grid-template-columns: 1fr 1fr;
+    gap: 18px;
+  }
+
+  .feature-grid,
+  .activities-grid,
+  .games-grid,
+  .reminders-grid,
+  .events-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
