@@ -13,15 +13,18 @@ html {
 }
 
 body {
-  font-family: 'Comic Sans MS', cursive, sans-serif;
+  font-family: "Baloo 2", system-ui, -apple-system, BlinkMacSystemFont,
+    "Segoe UI", sans-serif;
   margin: 0;
   color: #fff;
 
-  /* Animated gradient background */
   background: linear-gradient(120deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
   background-size: 400% 400%;
   animation: gradientShift 18s ease infinite;
 }
+
+
+
 
 /* Gradient animation */
 @keyframes gradientShift {
@@ -38,12 +41,15 @@ header {
   box-shadow: 0 6px 14px rgba(0,0,0,0.45);
 }
 
-h1 {
-  font-size: 3em;
-  margin: 0;
-  font-family: 'Pacifico', cursive;
-  letter-spacing: 2px;
+h1,
+.logo-text h1 {
+  font-family: "Pacifico", "Baloo 2", cursive;
 }
+
+.hero-title {
+  font-family: "Pacifico", "Baloo 2", cursive;
+}
+
 
 /* =========================
    2. TOP NAV (TABS)
