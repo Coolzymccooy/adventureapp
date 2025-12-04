@@ -458,7 +458,8 @@ function redoDrawing() {
 // Saving + download
 function saveDrawing() {
   if (!canvas) return;
-  const dataURL = canvas.toDataURL();
+
+  const dataURL = canvas.toDataURL("image/png");
   const nameInput = document.getElementById("drawingName");
   const container = document.getElementById("savedDrawings");
   if (!nameInput || !container) return;
@@ -466,6 +467,7 @@ function saveDrawing() {
   const name =
     nameInput.value.trim() || "Drawing " + (container.children.length + 1);
 
+  // --- 1. Update UI locally (what you already had) ---
   const wrapper = document.createElement("div");
   wrapper.classList.add("saved-drawing");
 
@@ -482,11 +484,32 @@ function saveDrawing() {
   container.appendChild(wrapper);
 
   nameInput.value = "";
-  clearCanvas();
 
-  // Increment global drawing counter for everyone
-  incrementDrawingCount();
+  // Update little progress text
+  if (typeof renderDrawingProgress === "function") {
+    renderDrawingProgress();
+  }
+
+  // --- 2. ALSO save to Firestore if available ---
+  if (window.db) {
+    window.db
+      .collection("familyDrawings")
+      .add({
+        name: name,
+        dataURL: dataURL,
+        createdAt: firebase.firestore.FieldValue.serverTimestamp()
+      })
+      .then((docRef) => {
+        console.log("✅ Saved drawing to Firestore with id:", docRef.id);
+      })
+      .catch((err) => {
+        console.error("❌ Failed to save drawing:", err);
+      });
+  } else {
+    console.warn("Firestore (db) not available – drawing saved locally only.");
+  }
 }
+
 
 function downloadDrawing() {
   if (!canvas) return;
@@ -612,6 +635,49 @@ function initChallenges() {
   });
 }
 
+function initDrawingRealtimeGallery() {
+  const container = document.getElementById("savedDrawings");
+  if (!container || !window.db) return;
+
+  window.db
+    .collection("familyDrawings")
+    .orderBy("createdAt", "asc")
+    .onSnapshot((snapshot) => {
+      container.innerHTML = "";
+
+      snapshot.forEach((doc) => {
+        const data = doc.data() || {};
+        if (!data.dataURL) return;
+
+        const name = data.name || "Family drawing";
+
+        const wrapper = document.createElement("div");
+        wrapper.classList.add("saved-drawing");
+
+        const img = document.createElement("img");
+        img.src = data.dataURL;
+        img.alt = name;
+
+        const caption = document.createElement("div");
+        caption.className = "saved-drawing-name";
+        caption.textContent = name;
+
+        wrapper.appendChild(img);
+        wrapper.appendChild(caption);
+        container.appendChild(wrapper);
+      });
+
+      if (typeof renderDrawingProgress === "function") {
+        renderDrawingProgress();
+      }
+
+      console.log("🔄 Gallery synced, total drawings:", snapshot.size);
+    });
+}
+
+
 document.addEventListener("DOMContentLoaded", () => {
   initDrawing();
+  initDrawingRealtimeGallery(); // hook up Firebase gallery
 });
+
