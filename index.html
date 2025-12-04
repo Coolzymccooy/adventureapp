@@ -378,5 +378,120 @@
       setInterval(pickRandomMessage, 7000);
     })();
   </script>
+  <!-- Family Dashboard wiring: read Firestore + localStorage and update tiles -->
+  <script>
+    (function () {
+      const storiesEl = document.getElementById("fdStories");
+      const drawingsEl = document.getElementById("fdDrawings");
+      const activitiesEl = document.getElementById("fdActivities");
+      const gamesEl = document.getElementById("fdGames");
+      const familyCodeEl = document.getElementById("fdFamilyCode");
+      const lastUpdatedEl = document.getElementById("fdLastUpdated");
+
+      // If the widget isn't on this page, do nothing
+      if (!drawingsEl || !familyCodeEl) return;
+
+      // Helper: get the active family code (global first, then input, then GLOBAL)
+      function getActiveFamilyCode() {
+        let code = "";
+
+        if (typeof getGlobalFamilyCode === "function") {
+          code = getGlobalFamilyCode() || "";
+        }
+
+        if (!code) {
+          const input = document.getElementById("familyCode");
+          if (input && input.value.trim()) {
+            code = input.value.trim();
+          }
+        }
+
+        return (code || "GLOBAL").toUpperCase();
+      }
+
+      // Helper: count items from localStorage for now (stories / activities / games)
+      function getLocalCount(key) {
+        try {
+          const raw = localStorage.getItem(key);
+          if (!raw) return 0;
+          const parsed = JSON.parse(raw);
+          if (Array.isArray(parsed)) return parsed.length;
+          return 0;
+        } catch (e) {
+          console.warn("Local count error for", key, e);
+          return 0;
+        }
+      }
+
+      async function refreshFamilyDashboard() {
+        const code = getActiveFamilyCode();
+
+        // Show the code label
+        familyCodeEl.textContent = "Code: " + code;
+
+        // ---- Drawings: count in Firestore for this family ----
+        let drawingCount = 0;
+        const firestore = typeof window.db !== "undefined" ? window.db : null;
+
+        if (firestore) {
+          try {
+            let query = firestore.collection("familyDrawings");
+            if (code && code !== "GLOBAL") {
+              query = query.where("familyCode", "==", code);
+            }
+
+            const snapshot = await query.get();
+            drawingCount = snapshot.size;
+          } catch (err) {
+            console.error("Error loading drawing count:", err);
+          }
+        }
+
+        drawingsEl.textContent = drawingCount;
+
+        // ---- Other tiles: for now use localStorage (browser-local progress) ----
+        // If your stories/activities/games later move to Firestore,
+        // you can swap these for real queries.
+        if (storiesEl) {
+          storiesEl.textContent = getLocalCount("stories") || 0;
+        }
+        if (activitiesEl) {
+          activitiesEl.textContent = getLocalCount("activities") || 0;
+        }
+        if (gamesEl) {
+          gamesEl.textContent = getLocalCount("games") || 0;
+        }
+
+        // Update footer timestamp
+        if (lastUpdatedEl) {
+          lastUpdatedEl.textContent =
+            "Last updated: " + new Date().toLocaleString();
+        }
+      }
+
+      function initDashboard() {
+        // Initial render
+        refreshFamilyDashboard();
+
+        // If user types a new family code on the landing card, re-run
+        const codeInput = document.getElementById("familyCode");
+        if (codeInput) {
+          ["change", "blur", "keyup"].forEach((evt) => {
+            codeInput.addEventListener(evt, () => {
+              refreshFamilyDashboard();
+            });
+          });
+        }
+      }
+
+      if (document.readyState === "loading") {
+        document.addEventListener("DOMContentLoaded", initDashboard);
+      } else {
+        initDashboard();
+      }
+    })();
+  </script>
+</body>
+</html>
 </body>
 </html>
