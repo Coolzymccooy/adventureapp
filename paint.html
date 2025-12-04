@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Tiwaton Adventure – Paint Studio</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+  <header class="sub-header">
+    <a href="index.html" class="tab-logo-link">
+      <div class="tab-logo-badge">TA</div>
+      <span class="tab-logo-text">Tiwaton Adventure</span>
+    </a>
+  </header>
+
+  <nav class="tab">
+    <a class="tablinks" href="stories.html">Stories &amp; Quizzes</a>
+    <a class="tablinks active" href="drawing.html">Drawing &amp; Coloring</a>
+    <a class="tablinks" href="activities.html">Activities &amp; Reminders</a>
+    <a class="tablinks" href="games.html">Games &amp; Flashcards</a>
+    <a class="tablinks" href="countdown.html">Countdown &amp; Events</a>
+  </nav>
+
+  <main class="paint-page">
+    <section class="paint-layout">
+      <!-- Left: tools + template chooser -->
+      <aside class="paint-tools">
+        <h2>Paint Studio</h2>
+        <p class="paint-subtitle">
+          Choose a colouring page, then paint with magic brushes.
+        </p>
+
+        <label class="paint-field">
+          <span>Template category</span>
+          <select id="paintCategoryFilter"></select>
+        </label>
+
+        <label class="paint-field">
+          <span>Template</span>
+          <select id="paintTemplateSelect"></select>
+        </label>
+
+        <button type="button" id="openTemplateBrowserBtn" class="template-browser-trigger">
+          Browse all colouring pages
+        </button>
+
+        <div class="paint-field">
+          <span>Colour</span>
+          <input type="color" id="paintColor" value="#ff4b81">
+        </div>
+
+        <label class="paint-field">
+          <span>Brush size</span>
+          <input type="range" id="paintBrushSize" min="2" max="50" value="12">
+        </label>
+
+        <div class="paint-actions">
+          <button type="button" id="paintClearBtn">Clear paint</button>
+          <button type="button" id="paintRandomTemplateBtn">Surprise me!</button>
+        </div>
+
+        <button
+          type="button"
+          class="paint-back-to-drawing"
+          onclick="window.location.href='drawing.html'">
+          ← Back to Drawing Board
+        </button>
+      </aside>
+
+      <!-- Right: paint board -->
+      <section class="paint-board-wrapper">
+        <div class="paint-board">
+          <img id="paintTemplateImage" alt="Colouring template" />
+          <canvas id="paintCanvas"></canvas>
+        </div>
+        <p class="paint-tip">
+          Tip: On tablets, use your finger. On laptop, use the mouse or trackpad.
+        </p>
+      </section>
+    </section>
+
+    <!-- Template Browser Overlay -->
+    <div class="template-browser" id="templateBrowser" aria-hidden="true">
+      <div class="template-browser-panel">
+        <div class="template-browser-header">
+          <div>
+            <h2>Choose a colouring page</h2>
+            <p>Tap a picture to load it on the paint board.</p>
+          </div>
+          <button
+            type="button"
+            id="closeTemplateBrowserBtn"
+            class="template-browser-close">
+            ✕
+          </button>
+        </div>
+
+        <div class="template-browser-filters">
+          <select id="templateBrowserCategoryFilter"></select>
+          <input
+            type="text"
+            id="templateBrowserSearch"
+            placeholder="Search e.g. dinosaur, rocket, Bible..."
+          />
+        </div>
+
+        <div class="template-grid" id="templateGrid"></div>
+      </div>
+    </div>
+  </main>
+
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+  <script src="js/common.js"></script>
+  <script src="js/paint.js"></script>
+</body>
+</html>

@@ -343,6 +343,34 @@ button:hover,
     touch-action: none; /* smoother touch drawing */
 }
 
+/* Flip to Paints button on drawing page */
+.flip-to-paint-btn {
+  margin-top: 0.75rem;
+  padding: 0.6rem 1rem;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #f97316, #ec4899);
+  color: #fff;
+  font-family: "Baloo 2", system-ui, sans-serif;
+  font-size: 0.9rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.45);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.flip-to-paint-btn:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.65);
+  filter: brightness(1.05);
+}
+
+.flip-to-paint-note {
+  margin-top: 0.3rem;
+  font-size: 0.8rem;
+  opacity: 0.9;
+}
+
 
 
 /* challenges + badges area */
@@ -736,6 +764,172 @@ canvas.drawing-locked,
 .badge-popup-text p {
   margin: 4px 0 10px;
 }
+
+/* =========================
+   Paint Studio
+   ========================= */
+
+.paint-page {
+  padding: 1.5rem 1rem 2.5rem;
+}
+
+.paint-layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  gap: 1.8rem;
+  align-items: stretch;          /* <– key: make columns equal height */
+}
+
+/* Right side should fill the available height */
+.paint-board-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+}
+
+/* Board grows to fill wrapper height */
+.paint-board {
+  flex: 1;
+  min-height: 520px;             /* bump up from 420 – tweak to taste */
+}
+
+.paint-tools {
+  background: linear-gradient(150deg, #1f2937, #111827);
+  color: #f9fafb;
+  border-radius: 22px;
+  padding: 1.3rem 1.2rem 1.4rem;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+}
+
+.paint-tools h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.paint-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 0.9rem;
+}
+
+.paint-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.7rem;
+  font-size: 0.88rem;
+}
+
+.paint-field span {
+  opacity: 0.9;
+}
+
+.paint-field select,
+.paint-field input[type="color"],
+.paint-field input[type="range"] {
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  padding: 0.4rem 0.5rem;
+  background: rgba(15, 23, 42, 0.8);
+  color: #e5e7eb;
+  font-family: "Baloo 2", system-ui, sans-serif;
+  font-size: 0.88rem;
+}
+
+.paint-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.paint-actions button,
+.paint-back-to-drawing {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.55rem 0.7rem;
+  border-radius: 999px;
+  border: none;
+  font-family: "Baloo 2", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+#paintClearBtn {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #fff;
+}
+
+#paintRandomTemplateBtn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+}
+
+.paint-back-to-drawing {
+  margin-top: 0.8rem;
+  background: rgba(15, 23, 42, 0.7);
+  color: #e5e7eb;
+}
+
+.paint-actions button:hover,
+.paint-back-to-drawing:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.7);
+  filter: brightness(1.05);
+}
+
+.paint-board-wrapper {
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.paint-board {
+  position: relative;
+  border-radius: 26px;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #e5e7eb, #9ca3af);
+  box-shadow: 0 20px 45px rgba(15, 23, 42, 0.9);
+  min-height: 420px;
+}
+
+#paintTemplateImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+/* Paint layer on top of the template */
+#paintCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+/* Small helper text under the board */
+.paint-tip {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+/* On mobile we still stack vertically */
+@media (max-width: 900px) {
+  .paint-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .paint-board {
+    min-height: 380px;
+  }
+}
+
 
 /* =========================
    7. LANDING PAGE
@@ -2458,5 +2652,348 @@ canvas.drawing-locked,
     font-size: 0.8rem;
   }
 }
+
+/* =========================
+   Paint Studio & Template Browser
+   ========================= */
+
+.paint-page {
+  padding: 1.5rem 1rem 2.5rem;
+}
+
+.paint-layout {
+  max-width: 1100px;
+  margin: 0 auto;
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  gap: 1.8rem;
+  align-items: stretch;          /* ← important: equal height columns */
+}
+
+.paint-tools {
+  background: linear-gradient(150deg, #1f2937, #111827);
+  color: #f9fafb;
+  border-radius: 22px;
+  padding: 1.3rem 1.2rem 1.4rem;
+  box-shadow: 0 18px 40px rgba(15, 23, 42, 0.7);
+}
+
+.paint-tools h2 {
+  font-size: 1.5rem;
+  margin-bottom: 0.25rem;
+}
+
+.paint-subtitle {
+  font-size: 0.9rem;
+  opacity: 0.9;
+  margin-bottom: 0.9rem;
+}
+
+.paint-field {
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  margin-bottom: 0.7rem;
+  font-size: 0.88rem;
+}
+
+.paint-field span {
+  opacity: 0.9;
+}
+
+.paint-field select,
+.paint-field input[type="color"],
+.paint-field input[type="range"] {
+  border-radius: 12px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  padding: 0.4rem 0.5rem;
+  background: rgba(15, 23, 42, 0.8);
+  color: #e5e7eb;
+  font-family: "Baloo 2", system-ui, sans-serif;
+  font-size: 0.88rem;
+}
+
+.paint-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-top: 0.5rem;
+}
+
+.paint-actions button,
+.paint-back-to-drawing {
+  flex: 1;
+  min-width: 120px;
+  padding: 0.55rem 0.7rem;
+  border-radius: 999px;
+  border: none;
+  font-family: "Baloo 2", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+#paintClearBtn {
+  background: linear-gradient(135deg, #f97316, #ea580c);
+  color: #fff;
+}
+
+#paintRandomTemplateBtn {
+  background: linear-gradient(135deg, #22c55e, #16a34a);
+  color: #fff;
+}
+
+.paint-back-to-drawing {
+  margin-top: 0.8rem;
+  background: rgba(15, 23, 42, 0.7);
+  color: #e5e7eb;
+}
+
+.paint-actions button:hover,
+.paint-back-to-drawing:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.7);
+  filter: brightness(1.05);
+}
+
+
+.paint-board-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;                  /* ← fill column height */
+}
+
+.paint-board {
+  flex: 1;                       /* ← grow to fill wrapper */
+  min-height: 520px;             /* ← bump this up if you want even bigger */
+}
+
+#paintTemplateImage {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+  display: block;
+}
+
+#paintCanvas {
+  position: absolute;
+  inset: 0;
+  width: 100%;
+  height: 100%;
+  cursor: crosshair;
+}
+
+.paint-tip {
+  font-size: 0.85rem;
+  opacity: 0.85;
+}
+
+/* Template browser trigger button */
+.template-browser-trigger {
+  margin: 0.4rem 0 0.8rem;
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  border: none;
+  background: linear-gradient(135deg, #6366f1, #ec4899);
+  color: #fff;
+  font-family: "Baloo 2", system-ui, sans-serif;
+  font-size: 0.85rem;
+  font-weight: 700;
+  cursor: pointer;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.45);
+  transition: transform 0.18s ease, box-shadow 0.18s ease, filter 0.18s ease;
+}
+
+.template-browser-trigger:hover {
+  transform: translateY(-1px) scale(1.02);
+  box-shadow: 0 12px 26px rgba(15, 23, 42, 0.65);
+  filter: brightness(1.05);
+}
+
+/* Overlay container */
+.template-browser {
+  position: fixed;
+  inset: 0;
+  background: rgba(15, 23, 42, 0.7);
+  display: none;
+  align-items: center;
+  justify-content: center;
+  padding: 1rem;
+  z-index: 999;
+}
+
+.template-browser.is-open {
+  display: flex;
+}
+
+/* Panel */
+.template-browser-panel {
+  max-width: 1000px;
+  width: 100%;
+  max-height: 90vh;
+  background: radial-gradient(circle at top left, #1f2937, #020617);
+  border-radius: 24px;
+  box-shadow: 0 24px 60px rgba(15, 23, 42, 0.9);
+  padding: 1.4rem 1.4rem 1.2rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.8rem;
+  color: #e5e7eb;
+}
+
+.template-browser-header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  gap: 0.8rem;
+}
+
+.template-browser-header h2 {
+  margin: 0;
+  font-size: 1.4rem;
+}
+
+.template-browser-header p {
+  margin: 0.25rem 0 0;
+  font-size: 0.9rem;
+  opacity: 0.85;
+}
+
+.template-browser-close {
+  padding: 0.3rem 0.7rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  background: rgba(15, 23, 42, 0.8);
+  color: #e5e7eb;
+  cursor: pointer;
+  font-size: 0.9rem;
+}
+
+.template-browser-filters {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.6rem;
+}
+
+.template-browser-filters select,
+.template-browser-filters input[type="text"] {
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.7);
+  padding: 0.4rem 0.8rem;
+  background: rgba(15, 23, 42, 0.85);
+  color: #e5e7eb;
+  font-family: "Baloo 2", system-ui, sans-serif;
+  font-size: 0.85rem;
+}
+
+/* Grid */
+.template-grid {
+  margin-top: 0.4rem;
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(140px, 1fr));
+  gap: 0.75rem;
+  overflow-y: auto;
+  padding-right: 0.2rem;
+}
+
+.template-card {
+  border-radius: 18px;
+  padding: 0.5rem;
+  background: rgba(15, 23, 42, 0.9);
+  border: 1px solid rgba(148, 163, 184, 0.6);
+  cursor: pointer;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  gap: 0.35rem;
+  transition: transform 0.18s ease, box-shadow 0.18s ease, border-color 0.18s ease;
+}
+
+.template-card:hover {
+  transform: translateY(-2px);
+  box-shadow: 0 12px 32px rgba(15, 23, 42, 0.85);
+  border-color: rgba(224, 231, 255, 0.9);
+}
+
+.template-thumb {
+  position: relative;
+  border-radius: 14px;
+  overflow: hidden;
+  background: radial-gradient(circle at top, #e5e7eb, #9ca3af);
+  height: 120px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.template-thumb img {
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
+}
+
+.template-thumb-placeholder {
+  position: absolute;
+  inset: 0;
+  padding: 0.4rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  font-size: 0.8rem;
+  font-weight: 600;
+  color: #111827;
+  opacity: 0;
+  transition: opacity 0.2s ease;
+}
+
+.template-thumb-fallback .template-thumb-placeholder {
+  opacity: 1;
+}
+
+.template-name {
+  font-size: 0.85rem;
+  font-weight: 700;
+}
+
+.template-category {
+  font-size: 0.75rem;
+  opacity: 0.85;
+}
+
+.template-empty {
+  font-size: 0.9rem;
+  opacity: 0.85;
+  text-align: center;
+  grid-column: 1 / -1;
+}
+
+/* Prevent page scroll when overlay is open */
+.no-scroll {
+  overflow: hidden;
+}
+
+/* Responsive */
+@media (max-width: 900px) {
+  .paint-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .template-browser-panel {
+    padding: 1.1rem 1rem 1rem;
+  }
+}
+
+/* On smaller screens stack vertically */
+@media (max-width: 900px) {
+  .paint-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .paint-board {
+    min-height: 380px;
+  }
+
 
 

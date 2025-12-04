@@ -175,7 +175,7 @@
       <h3 class="feature-heading">Pick your adventure for tonight</h3>
 
       <div class="feature-grid">
-        <a href="drawing.html" class="feature-card feature-card-1">
+        <a href="drawing.html" class="feature-card feature-card-1" id="openDrawingFeature">
           <div class="feature-emoji">🎨</div>
           <h4>Art Studio (aka Sofa)</h4>
           <p>Create superhero families, crazy houses and “abstract masterpieces”.</p>
@@ -491,6 +491,42 @@
       }
     })();
   </script>
+<script>
+  (function () {
+    const drawingLink = document.getElementById("openDrawingFeature");
+    if (!drawingLink || !window.db) return;
+
+    async function getDrawingCountForFamily() {
+      let code = "";
+      try {
+        if (typeof getGlobalFamilyCode === "function") {
+          code = getGlobalFamilyCode() || "";
+        }
+      } catch (e) {}
+
+      let query = window.db.collection("familyDrawings");
+      if (code) {
+        query = query.where("familyCode", "==", code.toUpperCase());
+      }
+      const snapshot = await query.get();
+      return snapshot.size || 0;
+    }
+
+    drawingLink.addEventListener("click", async function (e) {
+      e.preventDefault();
+      let target = "drawing.html";
+      try {
+        const count = await getDrawingCountForFamily();
+        if (count >= 200) {
+          target = "drawing2.html";
+        }
+      } catch (err) {
+        console.warn("Could not calculate drawing count; falling back.", err);
+      }
+      window.location.href = target;
+    });
+  })();
+</script>
 </body>
 </html>
 </body>
