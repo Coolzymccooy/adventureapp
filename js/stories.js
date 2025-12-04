@@ -1,5 +1,53 @@
 // js/stories.js
 
+function getStoriesFamilyCode() {
+  if (typeof getGlobalFamilyCode === "function") {
+    return getGlobalFamilyCode();
+  }
+  return "GLOBAL";
+}
+
+function renderStoriesProgress() {
+  const el = document.querySelector("#Stories .progress-content");
+  if (!el) return;
+  const total = stories.length;
+  const goal = 10;
+  const remaining = Math.max(goal - total, 0);
+  const familyCode = getStoriesFamilyCode();
+
+  el.innerHTML =
+    "Family code: <b>" + familyCode + "</b><br>" +
+    "Total stories: <b>" + total + "</b><br>" +
+    (total >= goal
+      ? "🟢 Story goal reached! Keep creating and reading together."
+      : "Add <b>" +
+        remaining +
+        "</b> more stor" +
+        (remaining === 1 ? "y" : "ies") +
+        " to reach your goal!");
+}
+
+function updateStoriesProgressFromMetrics(metrics) {
+  const el = document.querySelector("#Stories .progress-content");
+  if (!el) return;
+
+  const familyCode = metrics.code || (
+    typeof getCurrentFamilyCode === "function" ? getCurrentFamilyCode() : "GLOBAL"
+  );
+  const storiesCount = metrics.storiesCount || 0;
+  const drawingsCount = metrics.drawingsCount || 0;
+  const activitiesCount = metrics.activitiesCount || 0;
+  const gamesCount = metrics.gamesCount || 0;
+
+  el.innerHTML =
+    "Family code: <b>" + familyCode + "</b><br>" +
+    "Stories saved: <b>" + storiesCount + "</b><br>" +
+    "Drawings saved: <b>" + drawingsCount + "</b><br>" +
+    "Activities done: <b>" + activitiesCount + "</b><br>" +
+    "Games played: <b>" + gamesCount + "</b>";
+}
+
+
 // 10 kids-friendly, caring, family-focused stories
 let stories = [
   {
@@ -164,9 +212,77 @@ function addStory() {
   stories.push({ title: newTitle, content: storyText });
   input.value = "";
 
-  renderStories();
-  renderStoriesProgress();
+  // Save custom story to Firestore per family
+function saveFamilyStoryToCloud(title, content) {
+  if (typeof getFirestore !== "function") return;
+  const db = getFirestore();
+  if (!db) return;
+
+  const familyCode = typeof getCurrentFamilyCode === "function"
+    ? getCurrentFamilyCode()
+    : "GLOBAL";
+
+  const childName = typeof getCurrentChildName === "function"
+    ? getCurrentChildName()
+    : null;
+
+  db.collection("familyStories").add({
+    familyCode: familyCode,
+    title: title,
+    content: content,
+    childName: childName,
+    createdAt: firebase.firestore.FieldValue.serverTimestamp()
+  }).then(() => {
+    console.log("✅ Story saved for family:", familyCode);
+  }).catch((err) => {
+    console.error("❌ Failed to save story:", err);
+  });
 }
+
+function subscribeToFamilyStories() {
+  if (typeof getFirestore !== "function") return;
+  const db = getFirestore();
+  if (!db) return;
+
+  const familyCode = typeof getCurrentFamilyCode === "function"
+    ? getCurrentFamilyCode()
+    : "GLOBAL";
+
+  db.collection("familyStories")
+    .where("familyCode", "==", familyCode)
+    .orderBy("createdAt", "asc")
+    .onSnapshot((snap) => {
+      // start with the built-in default stories
+      const baseStories = stories.slice(0, 10); // first 10 are defaults
+      const extra = [];
+
+      snap.forEach((doc) => {
+        const data = doc.data() || {};
+        if (!data.title || !data.content) return;
+        extra.push({
+          title: data.title,
+          content: data.content
+        });
+      });
+
+      stories = baseStories.concat(extra);
+      renderStories();
+      renderStoriesProgress();
+    });
+}
+
+
+  renderStories();
+
+  // 🔹 Update family metrics
+  if (typeof updateFamilyMetric === "function") {
+    updateFamilyMetric("storiesCount", 1);
+  }
+
+  // 🔹 Save this story to Firestore for this family
+  saveFamilyStoryToCloud(newTitle, storyText);
+}
+
 
 function renderStoriesProgress() {
   const el = document.querySelector("#Stories .progress-content");
@@ -192,4 +308,18 @@ function renderStoriesProgress() {
 document.addEventListener("DOMContentLoaded", function () {
   renderStories();
   renderStoriesProgress();
+});
+
+document.addEventListener("DOMContentLoaded", function () {
+  renderStories();
+  renderStoriesProgress();
+
+  if (typeof subscribeToFamilyStories === "function") {
+    subscribeToFamilyStories();
+  }
+
+  // also subscribe to family metrics for progress
+  if (typeof subscribeToFamilyMetrics === "function") {
+    subscribeToFamilyMetrics(updateStoriesProgressFromMetrics);
+  }
 });

@@ -32,6 +32,12 @@ let panStartX = 0;
 let panStartY = 0;
 let viewOffsetX = 0;
 let viewOffsetY = 0;
+let drawingEnabled = true;  // 👈 add this once
+
+let canvasLarge = false;
+
+
+
 
 // Family + gallery state
 let familyCodeInput = null;
@@ -50,10 +56,25 @@ let metaDocRef = null;
 // 2. Helpers: family / child
 // ------------------------------
 function getFamilyCode() {
-  if (!familyCodeInput) return "GLOBAL";
-  const val = (familyCodeInput.value || "").trim().toUpperCase();
-  return val || "GLOBAL";
+  let local = "";
+  if (familyCodeInput) {
+    local = (familyCodeInput.value || "").trim().toUpperCase();
+  }
+  const stored =
+    typeof getGlobalFamilyCode === "function"
+      ? getGlobalFamilyCode()
+      : "";
+
+  let code = local || stored || "GLOBAL";
+
+  // Keep global in sync if user edits local input
+  if (local && local !== stored && typeof setGlobalFamilyCode === "function") {
+    setGlobalFamilyCode(local);
+  }
+
+  return code;
 }
+
 
 function getChildName() {
   if (!childNameInput) return "Little Artist";
@@ -66,11 +87,73 @@ function getChildName() {
 // ------------------------------
 function syncCanvasSizeToDisplay() {
   if (!canvas) return;
-  const width = canvas.clientWidth || canvas.offsetWidth || 600;
-  const height = canvas.clientHeight || canvas.offsetHeight || 400;
+
+  const wrapper = canvas.parentElement;
+  if (!wrapper) return;
+
+  // Use inner size of the wrapper (excludes padding)
+  const width = wrapper.clientWidth;
+  const height = wrapper.clientHeight;
+
   canvas.width = width;
   canvas.height = height;
 }
+
+
+
+function toggleDrawingEnabled() {
+  drawingEnabled = !drawingEnabled;
+  const btn = document.getElementById("toggleDrawingBtn");
+  const wrapper = document.querySelector(".canvas-wrapper");
+
+  if (btn) {
+    btn.textContent = drawingEnabled ? "✋ Lock drawing" : "✅ Enable drawing";
+  }
+
+  if (canvas) {
+    canvas.classList.toggle("drawing-locked", !drawingEnabled);
+  }
+  if (wrapper) {
+    wrapper.classList.toggle("drawing-locked", !drawingEnabled);
+  }
+}
+
+
+
+
+function toggleCanvasSize() {
+  if (!canvas || !ctx) return;
+
+  canvasLarge = !canvasLarge;
+  const wrapper = document.querySelector(".canvas-wrapper");
+  const btn = document.getElementById("toggleCanvasSizeBtn");
+
+  if (wrapper) {
+    wrapper.classList.toggle("canvas-large", canvasLarge);
+  }
+  if (btn) {
+    btn.textContent = canvasLarge ? "Shrink board" : "Enlarge board";
+  }
+
+  // save current drawing
+  const currentImage = canvas.toDataURL("image/png");
+
+  // resize canvas to new wrapper size
+  syncCanvasSizeToDisplay();
+
+  // redraw previous image to fit new size
+  ctx.clearRect(0, 0, canvas.width, canvas.height);
+  if (currentImage) {
+    const img = new Image();
+    img.onload = () => {
+      ctx.drawImage(img, 0, 0, canvas.width, canvas.height);
+    };
+    img.src = currentImage;
+  }
+}
+
+
+
 
 function initDrawing() {
   // support both "drawingBoard" (your HTML) and "drawingCanvas" (earlier version)
@@ -220,6 +303,8 @@ function setCurrentChallengeGlobally(text) {
     setTimeout(() => activeText.classList.remove("challenge-pulse"), 400);
   }
 
+  applyChallengeStyle(text); 
+
   if (metaDocRef) {
     metaDocRef.set(
       {
@@ -229,6 +314,31 @@ function setCurrentChallengeGlobally(text) {
     );
   }
 }
+
+// Give the board fun looks when a challenge is picked
+function applyChallengeStyle(text) {
+  const wrapper = document.querySelector(".canvas-wrapper");
+  if (!wrapper) return;
+
+  // reset classes
+  wrapper.classList.remove(
+    "challenge-superheroes",
+    "challenge-home",
+    "challenge-place",
+    "challenge-thankful"
+  );
+
+  if (text.indexOf("superhero") !== -1 || text.indexOf("Superheroes") !== -1) {
+    wrapper.classList.add("challenge-superheroes");
+  } else if (text.indexOf("house") !== -1 || text.indexOf("Home") !== -1) {
+    wrapper.classList.add("challenge-home");
+  } else if (text.indexOf("place") !== -1) {
+    wrapper.classList.add("challenge-place");
+  } else if (text.indexOf("thank") !== -1 || text.indexOf("Thankful") !== -1) {
+    wrapper.classList.add("challenge-thankful");
+  }
+}
+
 
 // ------------------------------
 // 5. Background + clear
@@ -265,7 +375,10 @@ function getCanvasPos(e) {
   };
 }
 
+
+
 function startPosition(e) {
+if (!drawingEnabled) return; 
   if (!ctx || !canvas) return;
   const pos = getCanvasPos(e);
 
@@ -309,6 +422,7 @@ function finishedPosition() {
 }
 
 function draw(e) {
+     if (!drawingEnabled) return; 
   if (!ctx || !canvas) return;
   const brushTypeEl = document.getElementById("brushType");
   const colorEl = document.getElementById("brushColor");
@@ -346,16 +460,15 @@ function draw(e) {
 
   // Stickers
   if (stickerMode && currentSticker) {
-    ctx.font = size * 5 + "px serif";
-    ctx.textAlign = "center";
-    ctx.globalAlpha = opacity;
-    ctx.fillText(currentSticker, x, y);
-    ctx.globalAlpha = 1;
-    stickerMode = false;
-    const stickerSelect = document.getElementById("stickerSelect");
-    if (stickerSelect) stickerSelect.value = "";
-    return;
-  }
+  ctx.font = size * 5 + "px serif";
+  ctx.textAlign = "center";
+  ctx.globalAlpha = opacity;
+  ctx.fillText(currentSticker, x, y);
+  ctx.globalAlpha = 1;
+  // keep stickerMode ON so they can tap multiple places
+  return;
+}
+
 
   if (!isDrawing) return;
 

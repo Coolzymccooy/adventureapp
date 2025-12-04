@@ -153,6 +153,9 @@
             <button type="button" onclick="fillCanvas()">🪣 Fill</button>
             <button type="button" onclick="undoDrawing()">↩ Undo</button>
             <button type="button" onclick="redoDrawing()">↪ Redo</button>
+            <button type="button" id="toggleDrawingBtn" onclick="toggleDrawingEnabled()">
+            ✋ Lock drawing
+            </button>
             <button type="button" onclick="clearCanvas()">🧹 Clear</button>
             <button type="button" onclick="randomColor()">🎲 Surprise colour</button>
           </div>
@@ -170,6 +173,10 @@
 
             <button type="button" onclick="saveDrawing()">Save to gallery</button>
             <button type="button" id="exportPngBtn">Download PNG</button>
+            <button type="button" id="toggleCanvasSizeBtn" onclick="toggleCanvasSize()">
+            Enlarge board
+            </button>
+
           </div>
         </aside>
 

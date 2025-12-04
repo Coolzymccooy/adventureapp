@@ -4,6 +4,9 @@
   <meta charset="UTF-8">
   <title>Tiwaton Adventure</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="landing-body">
@@ -11,7 +14,6 @@
   <!-- MAIN HEADER + NAV -->
   <header class="main-header">
     <div class="logo-area">
-      <!-- Clickable logo back to landing -->
       <a href="index.html" class="tab-logo-link">
         <div class="logo-badge">TA</div>
         <div class="logo-text">
@@ -31,13 +33,14 @@
   </header>
 
   <!-- MAIN LANDING CONTENT -->
+    <!-- MAIN LANDING CONTENT -->
   <main class="landing-page">
     <!-- Floating background shapes -->
     <div class="floating-shape floating-shape-1"></div>
     <div class="floating-shape floating-shape-2"></div>
     <div class="floating-shape floating-shape-3"></div>
 
-    <!-- HERO SECTION -->
+    <!-- HERO SECTION (now at the top) -->
     <section class="hero-section">
       <div class="hero-left">
         <div class="hero-chip">New ✨ Family Adventure Hub</div>
@@ -110,6 +113,63 @@
       </div>
     </section>
 
+    <!-- FAMILY SETUP (mandatory family code, but no redirect gate for now) -->
+    <section class="family-setup-card">
+      <h2>Start your family adventure</h2>
+      <p>Choose a family code so all your drawings, stories and games stay together.</p>
+
+      <div class="family-setup-grid">
+        <input id="childName" type="text" placeholder="Child name (e.g. David)">
+        <input id="familyCode" type="text" placeholder="Family code (e.g. SEGUN-FAMILY)">
+      </div>
+
+      <button id="startAdventureBtn" class="btn-primary-wide">
+        Let’s go!
+      </button>
+
+      <p class="family-setup-hint">
+        Share this code with anyone you want to join your adventure.
+      </p>
+    </section>
+
+    <!-- FAMILY DASHBOARD (Firestore metrics) -->
+    <section class="family-dashboard">
+      <div class="fd-header">
+        <div class="fd-title">Family Progress</div>
+        <div id="fdFamilyCode" class="fd-familycode">Code: —</div>
+      </div>
+
+      <div class="fd-stats">
+        <div class="fd-stat-card">
+          <div class="fd-icon">📚</div>
+          <div class="fd-label">Stories</div>
+          <div id="fdStories" class="fd-value">0</div>
+        </div>
+
+        <div class="fd-stat-card">
+          <div class="fd-icon">🎨</div>
+          <div class="fd-label">Drawings</div>
+          <div id="fdDrawings" class="fd-value">0</div>
+        </div>
+
+        <div class="fd-stat-card">
+          <div class="fd-icon">📝</div>
+          <div class="fd-label">Activities</div>
+          <div id="fdActivities" class="fd-value">0</div>
+        </div>
+
+        <div class="fd-stat-card">
+          <div class="fd-icon">🎮</div>
+          <div class="fd-label">Games</div>
+          <div id="fdGames" class="fd-value">0</div>
+        </div>
+      </div>
+
+      <div class="fd-footer">
+        <span id="fdLastUpdated">Last updated: —</span>
+      </div>
+    </section>
+
     <!-- FEATURE CARDS -->
     <section class="feature-section">
       <h3 class="feature-heading">Pick your adventure for tonight</h3>
@@ -156,6 +216,7 @@
     </section>
   </main>
 
+
   <!-- FOOTER -->
   <footer class="main-footer">
     <div class="footer-inner">
@@ -200,7 +261,59 @@
   </footer>
 
   <!-- SCRIPTS -->
+
+  <!-- Firebase SDKs (v8) so index can read family metrics -->
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
+
+  <script>
+    // same config as other pages
+    var firebaseConfig = {
+      apiKey: "AIzaSyAuc_qVtzxpk1EeahGt-_KoBEMxOTdBm5U",
+      authDomain: "tiwaton-family-adventure.firebaseapp.com",
+      projectId: "tiwaton-family-adventure",
+      storageBucket: "tiwaton-family-adventure.firebasestorage.app",
+      messagingSenderId: "53083980470",
+      appId: "1:53083980470:web:dc41aa974cda42eaf61c17"
+    };
+    firebase.initializeApp(firebaseConfig);
+    window.db = firebase.firestore();
+  </script>
+
+  <!-- Shared helpers (footer, family profile, dashboard widget, gate, etc.) -->
   <script src="js/common.js"></script>
+
+  <!-- Family setup behaviour: require code before entering app -->
+  <script>
+    document.addEventListener("DOMContentLoaded", function () {
+      const btn = document.getElementById("startAdventureBtn");
+      if (!btn) return;
+
+      btn.addEventListener("click", function () {
+        const codeInput = document.getElementById("familyCode");
+        const nameInput = document.getElementById("childName");
+        const code = (codeInput.value || "").trim();
+        const name = (nameInput.value || "").trim();
+
+        if (!code) {
+          codeInput.focus();
+          codeInput.classList.add("input-error-shake");
+          setTimeout(() => codeInput.classList.remove("input-error-shake"), 300);
+          return;
+        }
+
+        if (typeof setGlobalFamilyCode === "function") {
+          setGlobalFamilyCode(code);
+        }
+        if (name && typeof setGlobalChildName === "function") {
+          setGlobalChildName(name);
+        }
+
+        // send them into the app (you can change the landing page if you prefer)
+        window.location.href = "stories.html";
+      });
+    });
+  </script>
 
   <!-- Tiny inline script just for landing-page fun text + counters -->
   <script>
