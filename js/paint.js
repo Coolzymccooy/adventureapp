@@ -59,7 +59,7 @@ const PAINT_TEMPLATES = [
     id: "planet-saturn",
     name: "Planet Saturn",
     category: "Space",
-    src: "assets/paint/planet-saturn.png"
+    src: "asset/paint/planet-saturn.png"
   },
 
   // Bible stories
@@ -157,6 +157,12 @@ let brushColor = "#ff4b81";
 let brushSize = 12;
 let currentTemplate = null;
 
+// NEW: drawing tool + history
+let currentTool = "brush"; // "brush" | "eraser"
+let currentStroke = null;
+const strokeHistory = [];
+const redoStack = [];
+
 // 3. Helpers
 function getUniqueCategories() {
   const set = new Set();
@@ -194,32 +200,61 @@ function syncPaintCanvasSize() {
   if (width > 0 && height > 0) {
     paintCanvas.width = width;
     paintCanvas.height = height;
+    redrawAllStrokes(); // keep strokes scaled on resize
   }
 }
 
 // 4. Painting
 function startPaint(e) {
   if (!paintCtx) return;
+
   isPainting = true;
+
+  const pos = getCanvasPos(e);
+
+  // set composite based on tool
+  paintCtx.globalCompositeOperation =
+    currentTool === "eraser" ? "destination-out" : "source-over";
+
   paintCtx.strokeStyle = brushColor;
   paintCtx.lineWidth = brushSize;
   paintCtx.lineCap = "round";
   paintCtx.lineJoin = "round";
 
-  const pos = getCanvasPos(e);
+  currentStroke = {
+    tool: currentTool,
+    color: brushColor,
+    size: brushSize,
+    points: [pos]
+  };
+
   paintCtx.beginPath();
   paintCtx.moveTo(pos.x, pos.y);
 }
 
 function movePaint(e) {
-  if (!isPainting || !paintCtx) return;
+  if (!isPainting || !paintCtx || !currentStroke) return;
   const pos = getCanvasPos(e);
+  currentStroke.points.push(pos);
   paintCtx.lineTo(pos.x, pos.y);
   paintCtx.stroke();
 }
 
 function endPaint() {
+  if (!isPainting) return;
   isPainting = false;
+
+  if (currentStroke && currentStroke.points.length > 1) {
+    strokeHistory.push(currentStroke);
+    // clear redo when new stroke is made
+    redoStack.length = 0;
+  }
+  currentStroke = null;
+
+  // restore default composite
+  if (paintCtx) {
+    paintCtx.globalCompositeOperation = "source-over";
+  }
 }
 
 function getCanvasPos(e) {
@@ -232,9 +267,41 @@ function getCanvasPos(e) {
   };
 }
 
+function redrawAllStrokes() {
+  if (!paintCtx || !paintCanvas) return;
+
+  // Clear all user paint
+  paintCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+
+  // Replay each stroke
+  for (const stroke of strokeHistory) {
+    if (!stroke.points || stroke.points.length < 2) continue;
+
+    paintCtx.globalCompositeOperation =
+      stroke.tool === "eraser" ? "destination-out" : "source-over";
+    paintCtx.strokeStyle = stroke.color;
+    paintCtx.lineWidth = stroke.size;
+    paintCtx.lineCap = "round";
+    paintCtx.lineJoin = "round";
+
+    paintCtx.beginPath();
+    paintCtx.moveTo(stroke.points[0].x, stroke.points[0].y);
+    for (let i = 1; i < stroke.points.length; i++) {
+      const p = stroke.points[i];
+      paintCtx.lineTo(p.x, p.y);
+    }
+    paintCtx.stroke();
+  }
+
+  // Reset to normal brush defaults
+  paintCtx.globalCompositeOperation = "source-over";
+}
+
 // 5. Template Browser
 function buildTemplateBrowserFilters() {
-  const categorySelect = document.getElementById("templateBrowserCategoryFilter");
+  const categorySelect = document.getElementById(
+    "templateBrowserCategoryFilter"
+  );
   if (!categorySelect) return;
 
   const cats = getUniqueCategories();
@@ -357,6 +424,9 @@ function initPaintControls() {
   const sizeInput = document.getElementById("paintBrushSize");
   const clearBtn = document.getElementById("paintClearBtn");
   const randomBtn = document.getElementById("paintRandomTemplateBtn");
+  const paletteEl = document.getElementById("paintPalette");
+const saveBtn = document.getElementById("paintSaveBtn");
+
 
   if (!categorySelect || !templateSelect) {
     return;
@@ -405,6 +475,20 @@ function initPaintControls() {
       brushColor = e.target.value || "#ff4b81";
     });
   }
+    // Preset palette swatches
+  if (paletteEl) {
+    paletteEl.querySelectorAll(".palette-swatch").forEach((swatch) => {
+      swatch.addEventListener("click", () => {
+        const selected = swatch.getAttribute("data-color");
+        if (!selected) return;
+        brushColor = selected;
+        if (colorInput) {
+          colorInput.value = selected;
+        }
+      });
+    });
+  }
+
 
   if (sizeInput) {
     sizeInput.addEventListener("input", (e) => {
@@ -412,12 +496,15 @@ function initPaintControls() {
     });
   }
 
-  if (clearBtn) {
+    if (clearBtn) {
     clearBtn.addEventListener("click", () => {
       if (!paintCtx) return;
       paintCtx.clearRect(0, 0, paintCanvas.width, paintCanvas.height);
+      strokeHistory.length = 0;
+      redoStack.length = 0;
     });
   }
+
 
   if (randomBtn) {
     randomBtn.addEventListener("click", () => {
@@ -431,10 +518,53 @@ function initPaintControls() {
     });
   }
 
+    // Save as PNG (template + painting)
+  if (saveBtn) {
+    saveBtn.addEventListener("click", () => {
+      if (!paintCanvas) return;
+
+      const imgEl = document.getElementById("paintTemplateImage");
+      const exportCanvas = document.createElement("canvas");
+      const w = paintCanvas.width;
+      const h = paintCanvas.height;
+
+      if (!w || !h) return;
+
+      exportCanvas.width = w;
+      exportCanvas.height = h;
+      const ctx = exportCanvas.getContext("2d");
+
+      // White background so PNG is not transparent
+      ctx.fillStyle = "#ffffff";
+      ctx.fillRect(0, 0, w, h);
+
+      // Draw the template image if it exists
+      if (imgEl && imgEl.complete) {
+        try {
+          ctx.drawImage(imgEl, 0, 0, w, h);
+        } catch (err) {
+          // If drawing the image fails due to CORS, we just skip the template
+          console.warn("Could not draw template on export:", err);
+        }
+      }
+
+      // Draw the paint layer on top
+      ctx.drawImage(paintCanvas, 0, 0);
+
+      const link = document.createElement("a");
+      const safeName = currentTemplate ? currentTemplate.id : "drawing";
+      link.download = `tiwaton-${safeName}-${Date.now()}.png`;
+      link.href = exportCanvas.toDataURL("image/png");
+      link.click();
+    });
+  }
+
   // Template browser triggers
   const openBrowserBtn = document.getElementById("openTemplateBrowserBtn");
   const closeBrowserBtn = document.getElementById("closeTemplateBrowserBtn");
-  const browserCatFilter = document.getElementById("templateBrowserCategoryFilter");
+  const browserCatFilter = document.getElementById(
+    "templateBrowserCategoryFilter"
+  );
   const browserSearch = document.getElementById("templateBrowserSearch");
 
   if (openBrowserBtn) {
@@ -466,6 +596,53 @@ function initPaintControls() {
       renderTemplateGrid();
     });
   }
+
+  // === Tool buttons ===
+  const toolBrushBtn = document.getElementById("toolBrushBtn");
+  const toolEraserBtn = document.getElementById("toolEraserBtn");
+  const undoBtn = document.getElementById("undoBtn");
+  const redoBtn = document.getElementById("redoBtn");
+
+  function setTool(tool) {
+    currentTool = tool;
+    if (toolBrushBtn && toolEraserBtn) {
+      if (tool === "brush") {
+        toolBrushBtn.classList.add("tool-toggle-active");
+        toolEraserBtn.classList.remove("tool-toggle-active");
+      } else {
+        toolEraserBtn.classList.add("tool-toggle-active");
+        toolBrushBtn.classList.remove("tool-toggle-active");
+      }
+    }
+  }
+
+  if (toolBrushBtn) {
+    toolBrushBtn.addEventListener("click", () => setTool("brush"));
+  }
+  if (toolEraserBtn) {
+    toolEraserBtn.addEventListener("click", () => setTool("eraser"));
+  }
+
+  if (undoBtn) {
+    undoBtn.addEventListener("click", () => {
+      if (!strokeHistory.length) return;
+      const last = strokeHistory.pop();
+      redoStack.push(last);
+      redrawAllStrokes();
+    });
+  }
+
+  if (redoBtn) {
+    redoBtn.addEventListener("click", () => {
+      if (!redoStack.length) return;
+      const stroke = redoStack.pop();
+      strokeHistory.push(stroke);
+      redrawAllStrokes();
+    });
+  }
+
+  // Start with brush tool
+  setTool("brush");
 
   // Initial dropdown population
   refreshTemplateOptions();

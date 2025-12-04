@@ -874,6 +874,46 @@ canvas.drawing-locked,
   background: rgba(15, 23, 42, 0.7);
   color: #e5e7eb;
 }
+/* Colour palette presets */
+.paint-palette {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.35rem;
+  margin: 0.3rem 0 0.8rem;
+}
+
+.palette-swatch {
+  width: 22px;
+  height: 22px;
+  border-radius: 999px;
+  border: 2px solid rgba(15, 23, 42, 0.9);
+  cursor: pointer;
+  padding: 0;
+  outline: none;
+  box-shadow: 0 0 0 1px rgba(148, 163, 184, 0.8);
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.palette-swatch:hover {
+  transform: translateY(-1px) scale(1.05);
+  box-shadow: 0 0 0 2px rgba(248, 250, 252, 0.9);
+}
+
+.palette-swatch[data-color="#ff4b81"] { background: #ff4b81; }
+.palette-swatch[data-color="#f97316"] { background: #f97316; }
+.palette-swatch[data-color="#22c55e"] { background: #22c55e; }
+.palette-swatch[data-color="#0ea5e9"] { background: #0ea5e9; }
+.palette-swatch[data-color="#6366f1"] { background: #6366f1; }
+.palette-swatch[data-color="#a855f7"] { background: #a855f7; }
+.palette-swatch[data-color="#facc15"] { background: #facc15; }
+.palette-swatch[data-color="#111827"] { background: #111827; }
+
+/* Save button inside .paint-actions */
+#paintSaveBtn {
+  background: linear-gradient(135deg, #6366f1, #22c55e);
+  color: #fff;
+}
+
 
 .paint-actions button:hover,
 .paint-back-to-drawing:hover {
@@ -918,6 +958,40 @@ canvas.drawing-locked,
   font-size: 0.85rem;
   opacity: 0.85;
 }
+.paint-tools-row {
+  display: flex;
+  gap: 0.5rem;
+  margin-bottom: 0.6rem;
+}
+
+.tool-toggle,
+.tool-undo-redo {
+  flex: 1;
+  padding: 0.35rem 0.5rem;
+  border-radius: 999px;
+  border: 1px solid rgba(148, 163, 184, 0.75);
+  background: rgba(15, 23, 42, 0.9);
+  color: #e5e7eb;
+  font-family: "Baloo 2", system-ui, sans-serif;
+  font-size: 0.8rem;
+  font-weight: 700;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease, background 0.15s ease;
+}
+
+.tool-toggle-active {
+  background: linear-gradient(135deg, #f97316, #ec4899);
+  color: #fff;
+  border-color: transparent;
+  box-shadow: 0 8px 18px rgba(15, 23, 42, 0.6);
+}
+
+.tool-toggle:hover,
+.tool-undo-redo:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 10px 22px rgba(15, 23, 42, 0.7);
+}
+
 
 /* On mobile we still stack vertically */
 @media (max-width: 900px) {
@@ -2994,6 +3068,7 @@ canvas.drawing-locked,
   .paint-board {
     min-height: 380px;
   }
+}
 
 
 

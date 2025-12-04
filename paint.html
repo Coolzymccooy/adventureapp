@@ -48,20 +48,59 @@
           Browse all colouring pages
         </button>
 
-        <div class="paint-field">
-          <span>Colour</span>
-          <input type="color" id="paintColor" value="#ff4b81">
-        </div>
+       
 
-        <label class="paint-field">
-          <span>Brush size</span>
-          <input type="range" id="paintBrushSize" min="2" max="50" value="12">
-        </label>
+        
 
-        <div class="paint-actions">
-          <button type="button" id="paintClearBtn">Clear paint</button>
-          <button type="button" id="paintRandomTemplateBtn">Surprise me!</button>
-        </div>
+        <div class="paint-tools-row">
+  <button type="button" id="toolBrushBtn" class="tool-toggle tool-toggle-active">
+    ✏️ Brush
+  </button>
+  <button type="button" id="toolEraserBtn" class="tool-toggle">
+    🧽 Eraser
+  </button>
+</div>
+<div class="paint-field">
+  <span>Colour</span>
+  <input type="color" id="paintColor" value="#ff4b81">
+</div>
+
+<!-- New preset palette -->
+<div class="paint-palette" id="paintPalette">
+  <button class="palette-swatch" data-color="#ff4b81" title="Pink"></button>
+  <button class="palette-swatch" data-color="#f97316" title="Orange"></button>
+  <button class="palette-swatch" data-color="#22c55e" title="Green"></button>
+  <button class="palette-swatch" data-color="#0ea5e9" title="Sky Blue"></button>
+  <button class="palette-swatch" data-color="#6366f1" title="Indigo"></button>
+  <button class="palette-swatch" data-color="#a855f7" title="Purple"></button>
+  <button class="palette-swatch" data-color="#facc15" title="Yellow"></button>
+  <button class="palette-swatch" data-color="#111827" title="Dark"></button>
+</div>
+
+<label class="paint-field">
+  <span>Brush size</span>
+  <input type="range" id="paintBrushSize" min="2" max="50" value="12">
+</label>
+
+<div class="paint-actions">
+  <button type="button" id="paintClearBtn">Clear paint</button>
+  <button type="button" id="paintRandomTemplateBtn">Surprise me!</button>
+  <!-- New: save button -->
+  <button type="button" id="paintSaveBtn">Save as picture</button>
+</div>
+
+
+<div class="paint-tools-row">
+  <button type="button" id="undoBtn" class="tool-undo-redo">
+    ⬅ Undo
+  </button>
+  <button type="button" id="redoBtn" class="tool-undo-redo">
+    Redo ➡
+  </button>
+</div>
+
+
+        
 
         <button
           type="button"
