@@ -4,18 +4,13 @@
   <meta charset="UTF-8">
   <title>Tiwaton Adventure</title>
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
-   <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Baloo+2:wght@400;600;700&display=swap" rel="stylesheet">
   <link rel="stylesheet" href="css/style.css">
-  
-
-// Initialize Firebase
-const app = initializeApp(firebaseConfig);
-  </script>
 </head>
 <body>
- <header class="sub-header">
+  <header class="sub-header">
     <a href="index.html" class="tab-logo-link">
       <div class="tab-logo-badge">TA</div>
       <span class="tab-logo-text">Tiwaton Adventure</span>
@@ -23,17 +18,17 @@ const app = initializeApp(firebaseConfig);
   </header>
 
   <nav class="tab">
-    <a class="tablinks" href="stories.html">Stories & Quizzes</a>
-    <a class="tablinks active" href="drawing.html">Drawing & Coloring</a>
-    <a class="tablinks" href="activities.html">Activities & Reminders</a>
-    <a class="tablinks" href="games.html">Games & Flashcards</a>
-    <a class="tablinks" href="countdown.html">Countdown & Events</a>
+    <a class="tablinks" href="stories.html">Stories &amp; Quizzes</a>
+    <a class="tablinks active" href="drawing.html">Drawing &amp; Coloring</a>
+    <a class="tablinks" href="activities.html">Activities &amp; Reminders</a>
+    <a class="tablinks" href="games.html">Games &amp; Flashcards</a>
+    <a class="tablinks" href="countdown.html">Countdown &amp; Events</a>
   </nav>
 
   <main>
     <section id="Drawing" class="tabcontent drawing-page">
       <div class="drawing-header-bar">
-        <h2>Drawing & Coloring</h2>
+        <h2>Drawing &amp; Coloring</h2>
         <span class="drawing-tip">
           Tip: Use touch or mouse to draw. Try the Rainbow brush or Surprise colour!
         </span>
@@ -162,10 +157,19 @@ const app = initializeApp(firebaseConfig);
             <button type="button" onclick="randomColor()">🎲 Surprise colour</button>
           </div>
 
+          <!-- Family sharing + meta -->
           <div class="drawing-meta">
             <input type="text" id="drawingName" placeholder="Drawing title" />
+
+            <input type="text" id="childName" placeholder="Child name (e.g. David)" />
+
+            <input type="text" id="familyCode" placeholder="Family code (e.g. SEGUN-FAMILY)" />
+
+            <textarea id="parentComment" rows="2"
+              placeholder="Parent comment for this drawing (shown under the picture)..."></textarea>
+
             <button type="button" onclick="saveDrawing()">Save to gallery</button>
-            <button type="button" onclick="downloadDrawing()">Download PNG</button>
+            <button type="button" id="exportPngBtn">Download PNG</button>
           </div>
         </aside>
 
@@ -176,7 +180,7 @@ const app = initializeApp(firebaseConfig);
           </div>
 
           <section class="drawing-gallery">
-             <h3>Saved Drawings (shared with family)</h3>
+            <h3>Saved Drawings (shared with family)</h3>
             <div id="savedDrawings"></div>
           </section>
         </div>
@@ -184,7 +188,7 @@ const app = initializeApp(firebaseConfig);
 
       <div class="comments-section">
         <h4>Parent Comments</h4>
-        <textarea class="comment-input" placeholder="Leave a comment on your child's progress..."></textarea>
+        <textarea class="comment-input" placeholder="Leave a general comment on your child's progress..."></textarea>
         <button onclick="addComment(this)">Post Comment</button>
         <div class="comments-list"></div>
       </div>
@@ -203,7 +207,7 @@ const app = initializeApp(firebaseConfig);
     </div>
   </div>
 
-<footer class="main-footer">
+  <footer class="main-footer">
     <div class="footer-inner">
       <div class="footer-column footer-brand">
         <div class="footer-logo">
@@ -249,24 +253,19 @@ const app = initializeApp(firebaseConfig);
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.10.1/firebase-firestore.js"></script>
 
-
   <script>
-    // 🔴 REPLACE these values with your actual config from Firebase!
     var firebaseConfig = {
-  apiKey: "AIzaSyAuc_qVtzxpk1EeahGt-_KoBEMxOTdBm5U",
-  authDomain: "tiwaton-family-adventure.firebaseapp.com",
-  projectId: "tiwaton-family-adventure",
-  storageBucket: "tiwaton-family-adventure.firebasestorage.app",
-  messagingSenderId: "53083980470",
-  appId: "1:53083980470:web:dc41aa974cda42eaf61c17"
-
+      apiKey: "AIzaSyAuc_qVtzxpk1EeahGt-_KoBEMxOTdBm5U",
+      authDomain: "tiwaton-family-adventure.firebaseapp.com",
+      projectId: "tiwaton-family-adventure",
+      storageBucket: "tiwaton-family-adventure.firebasestorage.app",
+      messagingSenderId: "53083980470",
+      appId: "1:53083980470:web:dc41aa974cda42eaf61c17"
     };
 
-  firebase.initializeApp(firebaseConfig);
-    // make Firestore available to other scripts
+    firebase.initializeApp(firebaseConfig);
     window.db = firebase.firestore();
   </script>
-
 
   <script src="js/common.js"></script>
   <script src="js/drawing.js"></script>

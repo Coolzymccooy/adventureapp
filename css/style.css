@@ -328,6 +328,21 @@ button:hover,
   color: #ffe4b5;
   opacity: 0.85;
 }
+.drawing-board-wrapper {
+    border: 2px solid #eee;
+    border-radius: 16px;
+    margin-top: 12px;
+    min-height: 400px;
+    position: relative;
+}
+
+#drawingCanvas {
+    display: block;
+    width: 100%;
+    height: 100%;
+    touch-action: none; /* smoother touch drawing */
+}
+
 
 /* challenges + badges area */
 .challenges-badges {
@@ -1931,3 +1946,245 @@ button:hover,
     grid-template-columns: 1fr;
   }
 }
+
+/* --- Stories page layout & cards --- */
+
+/* Base spacing */
+#Stories {
+  margin-top: 1.5rem;
+}
+
+/* Intro paragraph */
+#Stories .section-intro {
+  margin-bottom: 1rem;
+  color: #555;
+  font-size: 0.95rem;
+}
+
+/* Create-your-own-story card */
+.story-input-group {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 8px 20px rgba(0, 0, 0, 0.06);
+  margin-bottom: 1.5rem;
+}
+
+.story-input-group h3.subheading {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+  font-size: 1.1rem;
+}
+
+.story-input-group textarea {
+  width: 100%;
+  min-height: 120px;
+  border-radius: 12px;
+  border: 1px solid #e0e0f0;
+  padding: 0.75rem 0.9rem;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 0.75rem;
+}
+
+.story-input-group button {
+  display: inline-block;
+  padding: 0.5rem 1.2rem;
+  border-radius: 999px;
+  border: none;
+  background: #ff7a7a;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+}
+
+.story-input-group button:hover {
+  filter: brightness(0.95);
+}
+
+/* Story list container */
+#storiesContent {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* Individual story card rendered by stories.js */
+.story {
+  background: #ffffff;
+  border-radius: 14px;
+  padding: 0.75rem 1rem;
+  box-shadow: 0 4px 14px rgba(0, 0, 0, 0.04);
+}
+
+.story-title {
+  font-weight: 700;
+  cursor: pointer;
+  margin: 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+
+.story-title::after {
+  content: "▾";
+  font-size: 0.8rem;
+  opacity: 0.7;
+}
+
+.story-title[aria-expanded="true"]::after {
+  content: "▴";
+}
+
+.story-content {
+  display: none; /* toggled open/closed by JS */
+  margin-top: 0.5rem;
+  white-space: pre-wrap;
+  font-size: 0.95rem;
+  line-height: 1.5;
+}
+
+/* Progress + comments spacing */
+.progress-report {
+  margin-top: 1.75rem;
+}
+
+.comments-section {
+  margin-top: 1.25rem;
+}
+
+/* Larger screens: two-column layout (input left, stories right) */
+@media (min-width: 900px) {
+  #Stories {
+    display: grid;
+    grid-template-columns: minmax(0, 2fr) minmax(0, 3fr);
+    gap: 1.5rem;
+    align-items: flex-start;
+  }
+
+  #Stories .section-intro {
+    grid-column: 1 / -1;
+  }
+
+  #Stories .story-input-group {
+    grid-column: 1;
+  }
+
+  #storiesContent {
+    grid-column: 2;
+  }
+
+  #Stories .progress-report {
+    grid-column: 1;
+  }
+
+  #Stories .comments-section {
+    grid-column: 1 / -1;
+  }
+}
+
+/* Optional helper for hidden labels */
+.visually-hidden {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+/* --- Comment styling (used on Stories and other pages) --- */
+.comments-section {
+  background: #ffffff;
+  border-radius: 16px;
+  padding: 1.25rem 1.5rem;
+  box-shadow: 0 6px 18px rgba(0, 0, 0, 0.05);
+}
+
+.comments-section h4 {
+  margin-top: 0;
+  margin-bottom: 0.75rem;
+}
+
+.comment-input {
+  width: 100%;
+  min-height: 80px;
+  border-radius: 12px;
+  border: 1px solid #e0e0f0;
+  padding: 0.7rem 0.9rem;
+  font-family: inherit;
+  resize: vertical;
+  margin-bottom: 0.75rem;
+}
+
+.comments-section button {
+  display: inline-block;
+  padding: 0.4rem 1.1rem;
+  border-radius: 999px;
+  border: none;
+  background: #6c63ff;
+  color: #fff;
+  font-weight: 600;
+  cursor: pointer;
+  font-family: inherit;
+  margin-bottom: 0.75rem;
+}
+
+.comments-section button:hover {
+  filter: brightness(0.95);
+}
+
+.comments-list {
+  border-top: 1px solid #f0f0f5;
+  padding-top: 0.75rem;
+  display: flex;
+  flex-direction: column;
+  gap: 0.6rem;
+}
+
+.comment-empty {
+  font-size: 0.9rem;
+  color: #888;
+}
+
+.comment-item {
+  background: #faf9ff;
+  border-radius: 10px;
+  padding: 0.6rem 0.75rem;
+}
+
+.comment-meta {
+  font-size: 0.75rem;
+  color: #888;
+  margin-bottom: 0.15rem;
+}
+
+.comment-text {
+  margin: 0;
+  font-size: 0.95rem;
+}
+
+/* Make sure story text is visible */
+.story-title {
+  color: #222;
+}
+
+.story-content {
+  color: #333;
+}
+
+/* Comment text explicit colour */
+.comment-item {
+  color: #333;
+}
+
+.comment-text {
+  color: #333;
+}
+
+
+
