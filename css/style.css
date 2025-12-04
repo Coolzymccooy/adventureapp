@@ -1,11 +1,26 @@
+/* =========================
+   1. GLOBAL BASE
+   ========================= */
+
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  -webkit-text-size-adjust: 100%; /* stop iOS from zooming text */
+}
+
 body {
   font-family: 'Comic Sans MS', cursive, sans-serif;
   margin: 0;
+  color: #fff;
+
   /* Animated gradient background */
   background: linear-gradient(120deg, #ff9a9e, #fad0c4, #a18cd1, #fbc2eb);
   background-size: 400% 400%;
   animation: gradientShift 18s ease infinite;
-  color: #fff;
 }
 
 /* Gradient animation */
@@ -15,6 +30,7 @@ body {
   100% { background-position: 0% 50%; }
 }
 
+/* Simple legacy header (if used anywhere) */
 header {
   text-align: center;
   padding: 20px;
@@ -29,23 +45,29 @@ h1 {
   letter-spacing: 2px;
 }
 
-/* nav bar now uses <a> */
+/* =========================
+   2. TOP NAV (TABS)
+   ========================= */
+
 .tab {
   display: flex;
-  justify-content: space-around;
+  justify-content: center;
+  gap: 4px;
   background-color: rgba(0,0,0,0.85);
   user-select: none;
+  flex-wrap: wrap; /* helps both desktop shrinking & mobile */
 }
 
 .tab a {
   background: none;
   border: none;
   color: #fff;
-  padding: 14px 24px;
-  font-size: 1.1em;
+  padding: 12px 18px;
+  font-size: 1rem;
   transition: background 0.3s, transform 0.2s;
   border-bottom: 3px solid transparent;
   text-decoration: none;
+  border-radius: 0;
 }
 
 .tab a:hover {
@@ -55,9 +77,10 @@ h1 {
 
 .tab a.active {
   border-bottom: 3px solid orange;
-  background-color: rgba(255,255,255,0.25);
+  background-color: rgba(255,255,255,0.2);
 }
 
+/* Page container */
 .tabcontent {
   display: block; /* each page shows its own content */
   padding: 20px;
@@ -70,6 +93,10 @@ h1 {
   margin-right: auto;
   box-shadow: 0 12px 24px rgba(0,0,0,0.4);
 }
+
+/* =========================
+   3. FORM ELEMENTS & BUTTONS
+   ========================= */
 
 textarea,
 input[type='text'],
@@ -85,7 +112,8 @@ select {
   box-sizing: border-box;
 }
 
-button {
+button,
+.btn {
   margin-top: 12px;
   background-color: #ff6f61;
   border: none;
@@ -96,13 +124,23 @@ button {
   cursor: pointer;
   box-shadow: 0 3px 7px rgba(255,111,97,0.6);
   transition: background-color 0.3s, transform 0.15s, box-shadow 0.15s;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  text-decoration: none;
+  font-size: 0.95rem;
 }
 
-button:hover {
+button:hover,
+.btn:hover {
   background-color: #e65b51;
   transform: translateY(-1px);
   box-shadow: 0 5px 10px rgba(0,0,0,0.4);
 }
+
+/* =========================
+   4. GENERIC CARDS / ANIMATIONS
+   ========================= */
 
 .story,
 .activity,
@@ -117,6 +155,7 @@ button:hover {
   100% { transform: scale(1) rotate(0deg); }
 }
 
+/* Stories */
 .story {
   background: rgba(255, 255, 255, 0.1);
   margin: 12px 0;
@@ -139,52 +178,7 @@ button:hover {
   line-height: 1.4em;
 }
 
-/* Original */
-#drawingBoard {
-  border: 3px solid black;
-  border-radius: 12px;
-  background-color: #1a1a2e;
-  display: block;
-  width: 100%;
-  max-width: 860px;
-  height: 400px;
-  margin-bottom: 10px;
-}
-
-.brush-controls {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 12px;
-  align-items: center;
-  justify-content: center;
-  margin-bottom: 15px;
-}
-
-.brush-controls > * {
-  flex: 1 1 100px;
-}
-
-.saved-drawing {
-  margin: 8px;
-  border-radius: 8px;
-  box-shadow: 0 0 6px 2px rgba(0,0,0,0.8);
-  background-color: #222744;
-  padding: 5px;
-  display: inline-block;
-}
-
-.saved-drawing img {
-  max-width: 150px;
-  display: block;
-  border-radius: 8px;
-}
-
-.saved-drawing-name {
-  text-align: center;
-  margin-top: 4px;
-  font-size: 0.9em;
-}
-
+/* Activities */
 .activity {
   background: rgba(255, 255, 255, 0.1);
   padding: 12px;
@@ -213,6 +207,7 @@ button:hover {
   color: #ff4500;
 }
 
+/* Events */
 .event {
   margin: 12px 0;
   padding: 12px;
@@ -232,6 +227,7 @@ button:hover {
   margin-bottom: 6px;
 }
 
+/* Scrollable containers */
 #storiesContent,
 #activitiesContent,
 #eventsList,
@@ -240,6 +236,10 @@ button:hover {
   overflow-y: auto;
   padding-right: 10px;
 }
+
+/* =========================
+   5. COMMENTS + PROGRESS BOX
+   ========================= */
 
 .comments-section {
   background: rgba(255,255,255,0.07);
@@ -297,7 +297,10 @@ button:hover {
   color: #ffe4b5;
 }
 
-/* Drawing page layout */
+/* =========================
+   6. DRAWING PAGE
+   ========================= */
+
 .drawing-page {
   backdrop-filter: blur(10px);
   background: rgba(0, 0, 0, 0.35);
@@ -328,12 +331,7 @@ button:hover {
   margin-bottom: 16px;
 }
 
-@media (max-width: 900px) {
-  .challenges-badges {
-    grid-template-columns: 1fr;
-  }
-}
-
+/* Art challenges + badges containers */
 .art-challenges,
 .art-badges {
   background: rgba(0, 0, 0, 0.35);
@@ -430,12 +428,6 @@ button:hover {
   gap: 16px;
 }
 
-@media (max-width: 900px) {
-  .drawing-layout {
-    grid-template-columns: 1fr;
-  }
-}
-
 /* Sidebar / toolbar */
 .drawing-toolbar {
   background: rgba(0, 0, 0, 0.45);
@@ -500,18 +492,16 @@ button:hover {
   100% { transform: translateY(0px); }
 }
 
+/* Unified drawingBoard style */
 #drawingBoard {
   border: 2px solid #111;
   border-radius: 12px;
   background-color: #1a1a2e;
   display: block;
   width: 100%;
+  max-width: 860px;
   height: 400px;
-  cursor: crosshair;
-}
-
-/* default drawing cursor */
-#drawingBoard {
+  margin-bottom: 10px;
   cursor: crosshair;
 }
 
@@ -560,7 +550,25 @@ button:hover {
 }
 
 .saved-drawing {
+  margin: 8px;
+  border-radius: 8px;
+  box-shadow: 0 0 6px 2px rgba(0,0,0,0.8);
+  background-color: #222744;
+  padding: 5px;
+  display: inline-block;
   transition: transform 0.2s ease, box-shadow 0.2s ease;
+}
+
+.saved-drawing img {
+  max-width: 150px;
+  display: block;
+  border-radius: 8px;
+}
+
+.saved-drawing-name {
+  text-align: center;
+  margin-top: 4px;
+  font-size: 0.9em;
 }
 
 .saved-drawing:hover {
@@ -623,10 +631,11 @@ button:hover {
   margin: 4px 0 10px;
 }
 
-/* ========== LANDING PAGE STYLES ========== */
+/* =========================
+   7. LANDING PAGE
+   ========================= */
 
 .landing-body {
-  /* body already has animated gradient; this just tweaks feel for landing */
   display: flex;
   flex-direction: column;
   min-height: 100vh;
@@ -697,16 +706,6 @@ button:hover {
   box-shadow: 0 3px 8px rgba(0, 0, 0, 0.5);
 }
 
-@media (max-width: 800px) {
-  .main-header {
-    flex-direction: column;
-    align-items: flex-start;
-    gap: 10px;
-  }
-}
-
-/* Landing layout */
-
 .landing-page {
   position: relative;
   padding: 32px 16px 24px;
@@ -715,8 +714,7 @@ button:hover {
   margin: 0 auto;
 }
 
-/* Floating shapes in background */
-
+/* Floating shapes */
 .floating-shape {
   position: absolute;
   border-radius: 50%;
@@ -760,19 +758,12 @@ button:hover {
 }
 
 /* Hero section */
-
 .hero-section {
   display: grid;
   grid-template-columns: minmax(0, 1.2fr) minmax(0, 1fr);
   gap: 24px;
   align-items: center;
   margin-bottom: 32px;
-}
-
-@media (max-width: 900px) {
-  .hero-section {
-    grid-template-columns: 1fr;
-  }
 }
 
 .hero-left {
@@ -814,17 +805,6 @@ button:hover {
   flex-wrap: wrap;
   gap: 10px;
   margin-top: 16px;
-}
-
-.btn {
-  display: inline-flex;
-  align-items: center;
-  justify-content: center;
-  text-decoration: none;
-  border-radius: 999px;
-  font-size: 0.95rem;
-  padding: 9px 18px;
-  cursor: pointer;
 }
 
 .hero-btn-primary {
@@ -870,7 +850,6 @@ button:hover {
 }
 
 /* Hero right side */
-
 .hero-right {
   display: flex;
   justify-content: flex-end;
@@ -957,8 +936,7 @@ button:hover {
   opacity: 0.8;
 }
 
-/* FEATURE CARDS */
-
+/* FEATURE CARDS on landing */
 .feature-section {
   margin-top: 16px;
 }
@@ -1031,13 +1009,10 @@ button:hover {
 }
 
 /* Slight colour hints per card */
-
 .feature-card-1 { border: 1px solid rgba(255, 230, 170, 0.5); }
 .feature-card-2 { border: 1px solid rgba(186, 220, 255, 0.4); }
 .feature-card-3 { border: 1px solid rgba(197, 255, 214, 0.4); }
 .feature-card-4 { border: 1px solid rgba(255, 196, 234, 0.4); }
-
-/* Landing footnote */
 
 .landing-footnote {
   margin-top: 22px;
@@ -1051,10 +1026,9 @@ button:hover {
   opacity: 0.85;
 }
 
-/* Re-use your floating-card style for hero panel if defined elsewhere; safeguard: */
-.floating-card {
-  animation: floatCard 6s ease-in-out infinite;
-}
+/* =========================
+   8. GAMES PAGE
+   ========================= */
 
 .games-page {
   backdrop-filter: blur(10px);
@@ -1067,12 +1041,6 @@ button:hover {
   gap: 18px;
   align-items: stretch;
   margin-bottom: 18px;
-}
-
-@media (max-width: 900px) {
-  .games-hero {
-    grid-template-columns: 1fr;
-  }
 }
 
 .games-chip {
@@ -1215,7 +1183,6 @@ button:hover {
   margin-bottom: 10px;
 }
 
-/* footer note */
 .games-footer-note {
   margin-top: 18px;
   text-align: center;
@@ -1227,7 +1194,9 @@ button:hover {
   opacity: 0.85;
 }
 
-/* ===== Shared sub-header with clickable logo ===== */
+/* =========================
+   9. SUB-HEADER WITH LOGO (inner pages)
+   ========================= */
 
 .sub-header {
   display: flex;
@@ -1263,7 +1232,9 @@ button:hover {
   font-weight: 600;
 }
 
-/* ===== Activities & Reminders page ===== */
+/* =========================
+   10. ACTIVITIES PAGE
+   ========================= */
 
 .activities-page {
   backdrop-filter: blur(10px);
@@ -1276,12 +1247,6 @@ button:hover {
   gap: 18px;
   align-items: stretch;
   margin-bottom: 18px;
-}
-
-@media (max-width: 900px) {
-  .activities-hero {
-    grid-template-columns: 1fr;
-  }
 }
 
 .activities-chip {
@@ -1312,7 +1277,6 @@ button:hover {
 }
 
 /* Right hero card */
-
 .activities-hero-right .activities-orbit-card {
   background: radial-gradient(circle at top, #c5e1a5, #81c784);
   color: #122;
@@ -1370,7 +1334,6 @@ button:hover {
 }
 
 /* Activities grid */
-
 .activities-grid-section {
   margin-top: 8px;
 }
@@ -1380,14 +1343,11 @@ button:hover {
   margin-bottom: 10px;
 }
 
-/* reuse .feature-grid & .feature-card; just tiny tweak */
-
 .activity-card .feature-link {
   font-size: 0.78rem;
 }
 
 /* Reminders */
-
 .reminders-section {
   margin-top: 18px;
 }
@@ -1433,7 +1393,9 @@ button:hover {
   opacity: 0.9;
 }
 
-/* ===== Countdown & Events page ===== */
+/* =========================
+   11. COUNTDOWN PAGE
+   ========================= */
 
 .countdown-page {
   backdrop-filter: blur(10px);
@@ -1446,12 +1408,6 @@ button:hover {
   gap: 18px;
   align-items: stretch;
   margin-bottom: 18px;
-}
-
-@media (max-width: 900px) {
-  .countdown-hero {
-    grid-template-columns: 1fr;
-  }
 }
 
 .countdown-chip {
@@ -1482,7 +1438,6 @@ button:hover {
 }
 
 /* Right hero card */
-
 .countdown-hero-right .countdown-next-card {
   background: radial-gradient(circle at top, #b3e5fc, #4fc3f7);
   color: #012534;
@@ -1557,7 +1512,6 @@ button:hover {
 }
 
 /* Event creator form */
-
 .countdown-form-section {
   margin-top: 10px;
 }
@@ -1597,7 +1551,6 @@ button:hover {
 }
 
 /* Events list */
-
 .countdown-events-section {
   margin-top: 18px;
 }
@@ -1620,8 +1573,7 @@ button:hover {
   gap: 12px;
 }
 
-/* if countdown.js creates cards, they will inherit .event or .feature-card styles;
-   this just ensures they look nice */
+/* countdown cards hover */
 .events-grid .event {
   cursor: pointer;
   transition: transform 0.18s ease, box-shadow 0.18s ease;
@@ -1632,7 +1584,9 @@ button:hover {
   box-shadow: 0 10px 20px rgba(0,0,0,0.8);
 }
 
-/* ===== Global Footer ===== */
+/* =========================
+   12. GLOBAL FOOTER
+   ========================= */
 
 .main-footer {
   margin-top: 24px;
@@ -1642,6 +1596,14 @@ button:hover {
   box-shadow: 0 -6px 20px rgba(0, 0, 0, 0.7);
   font-size: 0.85rem;
   color: #f9f9f9;
+
+  background-image: linear-gradient(
+      135deg,
+      rgba(255, 255, 255, 0.08),
+      transparent
+    ),
+    radial-gradient(circle at top, rgba(255, 255, 255, 0.1), transparent);
+  background-blend-mode: soft-light;
 }
 
 .footer-inner {
@@ -1650,12 +1612,6 @@ button:hover {
   display: grid;
   grid-template-columns: minmax(0, 1.4fr) minmax(0, 1fr) minmax(0, 1.4fr);
   gap: 14px;
-}
-
-@media (max-width: 900px) {
-  .footer-inner {
-    grid-template-columns: 1fr;
-  }
 }
 
 .footer-column h4 {
@@ -1745,7 +1701,6 @@ button:hover {
 }
 
 /* bottom strip */
-
 .footer-bottom {
   max-width: 1100px;
   margin: 0 auto;
@@ -1763,28 +1718,9 @@ button:hover {
   opacity: 0.7;
 }
 
-/* subtle shimmer on footer background */
-
-.main-footer {
-  background-image: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.08),
-      transparent
-    ),
-    radial-gradient(circle at top, rgba(255, 255, 255, 0.1), transparent);
-  background-blend-mode: soft-light;
-}
-
-
-
-
-
-/* ===== Mobile & tablet tweaks ===== */
-
-/* Stop Safari from randomly enlarging text */
-html {
-  -webkit-text-size-adjust: 100%;
-}
+/* =========================
+   13. RESPONSIVE TWEAKS
+   ========================= */
 
 /* Small phones */
 @media (max-width: 600px) {
@@ -1847,7 +1783,6 @@ html {
 
   .hero-cta-row .btn {
     width: 100%;
-    justify-content: center;
   }
 
   /* Feature grids → single column */
@@ -1931,5 +1866,17 @@ html {
   .reminders-grid,
   .events-grid {
     grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+/* Small header tweaks */
+@media (max-width: 800px) {
+  .main-header {
+    flex-direction: column;
+    align-items: flex-start;
+    gap: 10px;
+  }
+  .footer-inner {
+    grid-template-columns: 1fr;
   }
 }

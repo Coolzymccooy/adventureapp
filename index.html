@@ -3,20 +3,22 @@
 <head>
   <meta charset="UTF-8">
   <title>Tiwaton Adventure</title>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />  
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <link rel="stylesheet" href="css/style.css">
 </head>
 <body class="landing-body">
+
+  <!-- MAIN HEADER + NAV -->
   <header class="main-header">
-     <header class="sub-header">
-         <a href="index.html" class="tab-logo-link"></a>
-      <div class="logo-badge">TA</div>
-      <span class="tab-logo-text">Tiwaton Adventure</span>
-     
-         </a>
-        <h1>Tiwaton Adventure</h1>
-        <p class="logo-tagline">Where family time becomes legendary.</p>
-      </div>
+    <div class="logo-area">
+      <!-- Clickable logo back to landing -->
+      <a href="index.html" class="tab-logo-link">
+        <div class="logo-badge">TA</div>
+        <div class="logo-text">
+          <h1>Tiwaton Adventure</h1>
+          <p class="logo-tagline">Where family time becomes legendary.</p>
+        </div>
+      </a>
     </div>
 
     <nav class="main-nav">
@@ -28,6 +30,7 @@
     </nav>
   </header>
 
+  <!-- MAIN LANDING CONTENT -->
   <main class="landing-page">
     <!-- Floating background shapes -->
     <div class="floating-shape floating-shape-1"></div>
@@ -129,7 +132,7 @@
         <a href="games.html" class="feature-card feature-card-3">
           <div class="feature-emoji">🧠</div>
           <h4>Brain Gym (Fun Version)</h4>
-          <p>Mini games & flashcards that quietly stretch their minds while they play.</p>
+          <p>Mini games &amp; flashcards that quietly stretch their minds while they play.</p>
           <span class="feature-link">Explore Games &amp; Flashcards →</span>
         </a>
 
@@ -153,74 +156,8 @@
     </section>
   </main>
 
-  <script src="js/common.js"></script>
-
-  <!-- Tiny inline script just for landing-page fun text + counters -->
-  <script>
-    (function () {
-      const funnyMessages = [
-        "Plot twist: Mum is the real superhero.",
-        "Current mood: snacks, stories, and zero homework talk.",
-        "If giggles were Wi-Fi, your house would have full bars.",
-        "Professional fun-havers detected in this household.",
-        "Tonight’s mission: keep Dad awake past 8:30pm.",
-        "Family rule: whoever laughs the loudest wins.",
-        "Loading extra joy… please wait… 3…2…1… 💥",
-        "Breaking news: your family just got 10% more awesome."
-      ];
-
-      const funnyEl = document.getElementById("funnyMessage");
-      const xpEl = document.getElementById("xpCounter");
-      const laughEl = document.getElementById("laughCounter");
-      const xpProgress = document.getElementById("xpProgress");
-      const xpGoalEl = document.getElementById("xpGoal");
-
-      // Cute fake numbers just for landing page vibe
-      let xp = 0;
-      let laughs = 0;
-      const xpGoal = 5;
-
-      function pickRandomMessage() {
-        if (!funnyEl) return;
-        const msg = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
-        funnyEl.textContent = msg;
-      }
-
-      function animateCounters() {
-        if (!xpEl || !laughEl || !xpProgress || !xpGoalEl) return;
-
-        xpGoalEl.textContent = xpGoal;
-
-        let step = 0;
-        const maxSteps = 60;
-
-        const targetXp = xpGoal + Math.floor(Math.random() * 12); // between goal and goal+11
-        const targetLaughs = 10 + Math.floor(Math.random() * 40);
-
-        const interval = setInterval(() => {
-          step++;
-          const t = step / maxSteps;
-
-          xp = Math.round(targetXp * t);
-          laughs = Math.round(targetLaughs * t);
-
-          xpEl.textContent = xp;
-          laughEl.textContent = laughs;
-
-          const progressPct = Math.min(100, (xp / xpGoal) * 100);
-          xpProgress.style.width = progressPct + "%";
-
-          if (step >= maxSteps) clearInterval(interval);
-        }, 40);
-      }
-
-      pickRandomMessage();
-      animateCounters();
-      setInterval(pickRandomMessage, 7000);
-    })();
-  </script>
-
-    <footer class="main-footer">
+  <!-- FOOTER -->
+  <footer class="main-footer">
     <div class="footer-inner">
       <div class="footer-column footer-brand">
         <div class="footer-logo">
@@ -261,11 +198,72 @@
       <span>Powered by love, laughter &amp; a bit of JavaScript.</span>
     </div>
   </footer>
- 
-  <script src="js/common.js"></script>
-  <script src="js/stories.js"></script>
-  <script src="js/comments.js"></script>
 
+  <!-- SCRIPTS -->
+  <script src="js/common.js"></script>
+
+  <!-- Tiny inline script just for landing-page fun text + counters -->
+  <script>
+    (function () {
+      const funnyMessages = [
+        "Plot twist: Mum is the real superhero.",
+        "Current mood: snacks, stories, and zero homework talk.",
+        "If giggles were Wi-Fi, your house would have full bars.",
+        "Professional fun-havers detected in this household.",
+        "Tonight’s mission: keep Dad awake past 8:30pm.",
+        "Family rule: whoever laughs the loudest wins.",
+        "Loading extra joy… please wait… 3…2…1… 💥",
+        "Breaking news: your family just got 10% more awesome."
+      ];
+
+      const funnyEl = document.getElementById("funnyMessage");
+      const xpEl = document.getElementById("xpCounter");
+      const laughEl = document.getElementById("laughCounter");
+      const xpProgress = document.getElementById("xpProgress");
+      const xpGoalEl = document.getElementById("xpGoal");
+
+      let xp = 0;
+      let laughs = 0;
+      const xpGoal = 5;
+
+      function pickRandomMessage() {
+        if (!funnyEl) return;
+        const msg = funnyMessages[Math.floor(Math.random() * funnyMessages.length)];
+        funnyEl.textContent = msg;
+      }
+
+      function animateCounters() {
+        if (!xpEl || !laughEl || !xpProgress || !xpGoalEl) return;
+
+        xpGoalEl.textContent = xpGoal;
+
+        let step = 0;
+        const maxSteps = 60;
+
+        const targetXp = xpGoal + Math.floor(Math.random() * 12);
+        const targetLaughs = 10 + Math.floor(Math.random() * 40);
+
+        const interval = setInterval(() => {
+          step++;
+          const t = step / maxSteps;
+
+          xp = Math.round(targetXp * t);
+          laughs = Math.round(targetLaughs * t);
+
+          xpEl.textContent = xp;
+          laughEl.textContent = laughs;
+
+          const progressPct = Math.min(100, (xp / xpGoal) * 100);
+          xpProgress.style.width = progressPct + "%";
+
+          if (step >= maxSteps) clearInterval(interval);
+        }, 40);
+      }
+
+      pickRandomMessage();
+      animateCounters();
+      setInterval(pickRandomMessage, 7000);
+    })();
+  </script>
 </body>
 </html>
-
